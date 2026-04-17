@@ -102,7 +102,7 @@ UniServe AI ek **revolutionary unified platform** hai jo multiple services – *
 
 ## 🖥️ Live Demo
 
-> **[Click Here for Live Demo](https://dancing-sunburst-e01bc5.netlify.app/)**
+> **[Click Here for Live Demo](https://universeaixx.netlify.app/)**
 
 > **[GitHub Repository](https://github.com/HACKERX405/uniserve-ai)**
 
