@@ -3,7 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UniServe AI – Complete Service Hub</title>
+    <title>UniServe AI – Premium Firebase Backend</title>
+    
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -19,7 +25,7 @@
             overflow-x: hidden;
         }
 
-        /* Light Mode (Default) */
+        /* Light Mode */
         body.light-mode {
             background: #f5f7fa;
             color: #1a1a2e;
@@ -30,14 +36,10 @@
         body.light-mode .compare-section,
         body.light-mode .dashboard,
         body.light-mode .modal-content,
-        body.light-mode .chat-window {
+        body.light-mode .chat-window,
+        body.light-mode .provider-card {
             background: rgba(255,255,255,0.95);
             border-color: rgba(0,0,0,0.1);
-            color: #1a1a2e;
-        }
-
-        body.light-mode .service-card .card-content h3,
-        body.light-mode .service-card .card-content .price {
             color: #1a1a2e;
         }
 
@@ -46,7 +48,7 @@
             color: #1a1a2e;
         }
 
-        /* Dark Mode (Default) */
+        /* Dark Mode */
         body.dark-mode {
             background: #0a0a1a;
             color: #fff;
@@ -57,7 +59,8 @@
         body.dark-mode .compare-section,
         body.dark-mode .dashboard,
         body.dark-mode .modal-content,
-        body.dark-mode .chat-window {
+        body.dark-mode .chat-window,
+        body.dark-mode .provider-card {
             background: rgba(255,255,255,0.05);
             border-color: rgba(255,255,255,0.1);
             color: #fff;
@@ -113,14 +116,12 @@
             cursor: pointer;
             font-size: 1rem;
             transition: 0.3s;
-            text-decoration: none;
         }
 
         .nav-links a:hover, .nav-links button:hover {
             color: #667eea;
         }
 
-        /* Dark Mode Toggle */
         .theme-toggle {
             background: rgba(128,128,128,0.2);
             border-radius: 30px;
@@ -176,6 +177,16 @@
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(76,175,80,0.2);
+            padding: 0.3rem 1rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+            color: #4CAF50;
         }
 
         /* Container */
@@ -249,7 +260,7 @@
             cursor: pointer;
         }
 
-        /* Compare */
+        /* Compare Section */
         .compare-section, .dashboard, .history-section, .map-section {
             border-radius: 24px;
             padding: 1.2rem;
@@ -273,7 +284,7 @@
             border-bottom: 1px solid rgba(255,255,255,0.05);
         }
 
-        /* Map Fake */
+        /* Map */
         .fake-map {
             height: 250px;
             background: linear-gradient(135deg, #1e3c72, #2a5298);
@@ -320,6 +331,96 @@
             padding: 0.8rem;
             display: none;
             z-index: 200;
+        }
+
+        /* Provider Modal */
+        .provider-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            backdrop-filter: blur(10px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            flex-direction: column;
+        }
+
+        .provider-modal.active {
+            display: flex;
+        }
+
+        .provider-card {
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 1.2rem;
+            margin: 0.5rem;
+            cursor: pointer;
+            transition: 0.3s;
+            text-align: center;
+            min-width: 200px;
+            border: 2px solid transparent;
+        }
+
+        .provider-card:hover {
+            transform: scale(1.05);
+            background: rgba(255,255,255,0.2);
+        }
+
+        .provider-card.best-price {
+            border-color: #4CAF50;
+            background: rgba(76,175,80,0.2);
+            position: relative;
+        }
+
+        .provider-card.best-price::after {
+            content: "🏆 BEST PRICE";
+            position: absolute;
+            top: -10px;
+            right: 10px;
+            background: #4CAF50;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+
+        .provider-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .provider-price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 0.5rem 0;
+        }
+
+        .provider-rating {
+            color: #ffc107;
+            margin: 0.3rem 0;
+        }
+
+        .options-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            max-width: 900px;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 2rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+            color: white;
         }
 
         /* Chatbot */
@@ -453,6 +554,8 @@
             .nav-links { gap: 0.8rem; font-size: 0.8rem; }
             .compare-header, .compare-row { grid-template-columns: 1fr 1fr; gap: 0.5rem; }
             .chat-window { width: 300px; right: 10px; }
+            .options-container { flex-direction: column; align-items: center; }
+            .provider-card { width: 90%; }
         }
     </style>
 </head>
@@ -487,19 +590,20 @@
         <!-- Home Section -->
         <div id="homeSection">
             <section class="hero">
-                <h1>AI-Powered Unified Services</h1>
-                <p>Your personal AI assistant guides you through every booking.</p>
+                <h1>AI-Powered Best Price Compare</h1>
+                <p>Compare Ola, Uber, Rapido, Blinkit, Zepto, Urban Company & more!</p>
+                <div class="hero-badge"><i class="fas fa-trophy"></i> Best Price Guaranteed 🏆</div>
             </section>
 
             <div class="section-title"><i class="fas fa-grid-2"></i><h2>Available Services</h2></div>
             <div class="services-grid" id="servicesGrid"></div>
 
-            <div class="section-title"><i class="fas fa-chart-simple"></i><h2>Compare & Decide</h2></div>
+            <div class="section-title"><i class="fas fa-chart-simple"></i><h2>Recent Bookings</h2></div>
             <div class="compare-section" id="compareSection">
                 <div id="compareList"></div>
             </div>
 
-            <div class="section-title"><i class="fas fa-map-marker-alt"></i><h2>Nearby Services (Map View)</h2></div>
+            <div class="section-title"><i class="fas fa-map-marker-alt"></i><h2>Nearby Services</h2></div>
             <div class="map-section" id="mapSection">
                 <div class="fake-map">
                     <i class="fas fa-map-marked-alt" style="font-size:3rem;"></i>
@@ -527,24 +631,30 @@
     </div>
 </div>
 
+<!-- Provider Modal -->
+<div class="provider-modal" id="providerModal">
+    <button class="close-modal" onclick="closeProviderModal()">&times;</button>
+    <div class="options-container" id="providerOptionsList"></div>
+</div>
+
 <!-- Auth Container -->
 <div id="authContainer" class="auth-container">
     <h2><i class="fas fa-user-astronaut"></i> Welcome to UniServe AI</h2>
     <p>Login or Sign Up to continue</p>
-    <div id="authTabs" style="display:flex; gap:1rem; margin:1rem 0;">
+    <div style="display:flex; gap:1rem; margin:1rem 0;">
         <button onclick="showAuthForm('login')" style="flex:1;">Login</button>
         <button onclick="showAuthForm('signup')" style="flex:1;">Sign Up</button>
     </div>
     <div id="loginForm">
         <input type="email" id="loginEmail" placeholder="Email">
         <input type="password" id="loginPassword" placeholder="Password">
-        <button onclick="login()">Login</button>
+        <button onclick="handleLogin()">Login</button>
     </div>
     <div id="signupForm" style="display:none;">
         <input type="text" id="signupName" placeholder="Full Name">
         <input type="email" id="signupEmail" placeholder="Email">
         <input type="password" id="signupPassword" placeholder="Password">
-        <button onclick="signup()">Create Account</button>
+        <button onclick="handleSignup()">Create Account</button>
     </div>
 </div>
 
@@ -556,7 +666,7 @@
             <button class="close-chat" onclick="toggleChat()">×</button>
         </div>
         <div class="chat-messages" id="chatMessages">
-            <div class="message ai"><div class="message-bubble">👋 Hi! Need help? Type 'cab', 'grocery', 'repair', or 'doctor'!</div></div>
+            <div class="message ai"><div class="message-bubble">👋 Hi! Type 'cab', 'grocery', 'repair', or 'doctor' for best deals!</div></div>
         </div>
         <div class="chat-input-area">
             <input type="text" id="chatInput" placeholder="Ask me..." onkeypress="if(event.key==='Enter') sendMessage()">
@@ -580,7 +690,7 @@
             <option>UPI</option>
             <option>Cash</option>
         </select>
-        <button class="book-btn" onclick="confirmBooking()">Confirm</button>
+        <button class="book-btn" onclick="finalizeBooking()">Confirm</button>
         <button onclick="closeModal()">Cancel</button>
     </div>
 </div>
@@ -588,267 +698,489 @@
 <div class="toast" id="toast"></div>
 
 <script>
-    // Services Data
+    // ========== FIREBASE CONFIGURATION ==========
+    // 🔥 YAHAN APNI FIREBASE CONFIG PASTE KARO 🔥
+    const firebaseConfig = {
+        apiKey: "AIzaSyAbboVcvYbXTgmU_UU3b5NwoiR9XUT3Zwk",
+        authDomain: "uniserve-ai.firebaseapp.com",
+        projectId: "uniserve-ai",
+        storageBucket: "uniserve-ai.firebasestorage.app",
+        messagingSenderId: "39151119059",
+        appId: "1:39151119059:web:b552624e9d0f58054b0226"
+    };
+    
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+    
+    // ========== MULTI-PROVIDER DATA ==========
+    const multiProviders = {
+        transport: [
+            { name: "🚗 Ola", price: "₹99", originalPrice: "₹120", rating: "4.8⭐", time: "5 min", discount: "21% OFF" },
+            { name: "🚙 Uber", price: "₹109", originalPrice: "₹130", rating: "4.9⭐", time: "4 min", discount: "16% OFF" },
+            { name: "🛵 Rapido", price: "₹79", originalPrice: "₹100", rating: "4.7⭐", time: "7 min", discount: "21% OFF", best: true }
+        ],
+        grocery: [
+            { name: "🛒 Blinkit", price: "₹199", originalPrice: "₹250", rating: "4.8⭐", time: "10 min", discount: "20% OFF" },
+            { name: "🥬 Zepto", price: "₹179", originalPrice: "₹230", rating: "4.7⭐", time: "12 min", discount: "22% OFF", best: true },
+            { name: "🍎 BigBasket", price: "₹210", originalPrice: "₹260", rating: "4.6⭐", time: "20 min", discount: "19% OFF" }
+        ],
+        repair: [
+            { name: "🔧 Urban Company", price: "₹399", originalPrice: "₹599", rating: "4.9⭐", time: "30 min", discount: "33% OFF", best: true },
+            { name: "⚡ Mr. Right", price: "₹449", originalPrice: "₹650", rating: "4.7⭐", time: "45 min", discount: "31% OFF" },
+            { name: "🔨 Service Mandi", price: "₹379", originalPrice: "₹550", rating: "4.6⭐", time: "60 min", discount: "31% OFF" }
+        ],
+        healthcare: [
+            { name: "🏥 Practo", price: "₹349", originalPrice: "₹499", rating: "4.9⭐", time: "Video consult", discount: "30% OFF", best: true },
+            { name: "💊 PharmEasy", price: "₹399", originalPrice: "₹550", rating: "4.7⭐", time: "Chat consult", discount: "27% OFF" },
+            { name: "🩺 Tata Health", price: "₹299", originalPrice: "₹450", rating: "4.8⭐", time: "Video consult", discount: "33% OFF" }
+        ]
+    };
+
+    // Services Data with Images
     const services = [
-        { id: 1, name: "Premium Cab", category: "transport", price: "₹120-400", rating: "4.9⭐", provider: "UniRide", image: "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=500&h=160&fit=crop" },
-        { id: 2, name: "Smart Grocery", category: "grocery", price: "₹200+", rating: "4.7⭐", provider: "UniMart", image: "https://images.unsplash.com/photo-1542838132-92c53300491e?w=500&h=160&fit=crop" },
-        { id: 3, name: "Expert Repair", category: "repair", price: "₹499+", rating: "4.9⭐", provider: "UniFix", image: "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=500&h=160&fit=crop" },
-        { id: 4, name: "Telehealth", category: "healthcare", price: "₹399", rating: "4.8⭐", provider: "UniHealth", image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=500&h=160&fit=crop" },
-        { id: 5, name: "Luxury Cab", category: "transport", price: "₹250-800", rating: "4.9⭐", provider: "UniRide+", image: "https://images.unsplash.com/photo-1550355291-bbee04a92027?w=500&h=160&fit=crop" },
-        { id: 6, name: "Organic Grocery", category: "grocery", price: "₹300+", rating: "4.6⭐", provider: "UniOrganics", image: "https://images.unsplash.com/photo-1488459716781-31db52582fe9?w=500&h=160&fit=crop" }
+        { id: 1, name: "Premium Cab", category: "transport", image: "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=500&h=160&fit=crop" },
+        { id: 2, name: "Smart Grocery", category: "grocery", image: "https://images.unsplash.com/photo-1542838132-92c53300491e?w=500&h=160&fit=crop" },
+        { id: 3, name: "Expert Repair", category: "repair", image: "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=500&h=160&fit=crop" },
+        { id: 4, name: "Telehealth", category: "healthcare", image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=500&h=160&fit=crop" }
     ];
 
+    // ========== GLOBAL VARIABLES ==========
     let currentUser = null;
-    let bookings = [];
+    let currentBookings = [];
     let notifications = [];
+    let selectedProvider = null;
+    let selectedCategory = null;
 
+    // ========== AUTHENTICATION FUNCTIONS ==========
     function showAuthForm(type) {
         document.getElementById('loginForm').style.display = type === 'login' ? 'block' : 'none';
         document.getElementById('signupForm').style.display = type === 'signup' ? 'block' : 'none';
     }
-
-    function signup() {
+    
+    async function handleSignup() {
         const name = document.getElementById('signupName').value;
         const email = document.getElementById('signupEmail').value;
         const password = document.getElementById('signupPassword').value;
-        if(!name || !email || !password) { alert("Fill all fields"); return; }
-        let users = JSON.parse(localStorage.getItem('users') || '[]');
-        if(users.find(u => u.email === email)) { alert("User exists"); return; }
-        users.push({ name, email, password, bookings: [] });
-        localStorage.setItem('users', JSON.stringify(users));
-        alert("Signup successful! Please login.");
-        showAuthForm('login');
+        
+        if(!name || !email || !password) {
+            showToast("Please fill all fields");
+            return;
+        }
+        
+        try {
+            const userCred = await auth.createUserWithEmailAndPassword(email, password);
+            await db.collection('users').doc(userCred.user.uid).set({
+                name: name,
+                email: email,
+                bookings: [],
+                createdAt: new Date()
+            });
+            showToast("Signup successful! Please login.");
+            showAuthForm('login');
+            document.getElementById('signupName').value = '';
+            document.getElementById('signupEmail').value = '';
+            document.getElementById('signupPassword').value = '';
+        } catch(error) {
+            showToast(error.message);
+        }
     }
-
-    function login() {
+    
+    async function handleLogin() {
         const email = document.getElementById('loginEmail').value;
         const password = document.getElementById('loginPassword').value;
-        let users = JSON.parse(localStorage.getItem('users') || '[]');
-        let user = users.find(u => u.email === email && u.password === password);
-        if(!user) { alert("Invalid credentials"); return; }
-        currentUser = user;
-        bookings = user.bookings || [];
-        localStorage.setItem('currentUser', JSON.stringify(currentUser));
-        document.getElementById('authContainer').style.display = 'none';
-        document.getElementById('mainApp').style.display = 'block';
-        renderServices();
-        renderCompare();
-        renderHistory();
-        updateDashboard();
-        renderNearby();
-        addNotification("Welcome back, " + user.name + "! 🎉");
-        showFakeEmailSMS("Login successful", "You've logged into UniServe AI");
+        
+        try {
+            const userCred = await auth.signInWithEmailAndPassword(email, password);
+            currentUser = userCred.user;
+            
+            const doc = await db.collection('users').doc(currentUser.uid).get();
+            if(doc.exists) {
+                currentBookings = doc.data().bookings || [];
+            }
+            
+            document.getElementById('authContainer').style.display = 'none';
+            document.getElementById('mainApp').style.display = 'block';
+            
+            renderServices();
+            renderCompare();
+            renderHistory();
+            updateDashboard();
+            renderNearby();
+            addNotification("Welcome back, " + (doc.data()?.name || email) + "! 🎉");
+            showToast("Login successful!");
+        } catch(error) {
+            showToast("Invalid email or password");
+        }
     }
-
-    function logout() {
+    
+    async function logout() {
+        await auth.signOut();
         currentUser = null;
+        currentBookings = [];
         document.getElementById('authContainer').style.display = 'block';
         document.getElementById('mainApp').style.display = 'none';
-        localStorage.removeItem('currentUser');
+        showToast("Logged out successfully");
     }
-
+    
+    // ========== RENDER FUNCTIONS ==========
     function renderServices() {
         const grid = document.getElementById('servicesGrid');
         if(!grid) return;
+        
         grid.innerHTML = services.map(s => `
-            <div class="service-card" onclick="bookService(${s.id})">
+            <div class="service-card" onclick="showProviderOptions('${s.category}')">
                 <div class="card-image" style="background-image: url('${s.image}');"></div>
                 <div class="card-content">
                     <span class="service-category">${s.category}</span>
                     <h3>${s.name}</h3>
-                    <div>${s.provider}</div>
-                    <div class="price">${s.price}</div>
-                    <div>${s.rating}</div>
-                    <button class="book-btn">Book Now</button>
+                    <div>Compare: Ola, Uber, Rapido and more!</div>
+                    <div class="price">Starting ₹79 only!</div>
+                    <button class="book-btn">Compare & Book 🏆</button>
                 </div>
             </div>
         `).join('');
     }
-
-    let currentService = null;
-    function bookService(id) {
-        currentService = services.find(s => s.id === id);
-        document.getElementById('bookingModal').style.display = 'flex';
+    
+    function showProviderOptions(category) {
+        selectedCategory = category;
+        const providers = multiProviders[category];
+        if(!providers) return;
+        
+        const bestPrice = Math.min(...providers.map(p => parseInt(p.price.replace(/[^0-9]/g, ''))));
+        
+        const optionsHtml = providers.map(p => {
+            const isBest = parseInt(p.price.replace(/[^0-9]/g, '')) === bestPrice;
+            return `
+                <div class="provider-card ${isBest ? 'best-price' : ''}" onclick="selectProvider('${p.name}', '${p.price}', '${p.originalPrice}', '${p.rating}')">
+                    <div class="provider-name">${p.name}</div>
+                    <div class="provider-price">${p.price} <span style="font-size:0.8rem; text-decoration:line-through; color:gray;">${p.originalPrice}</span></div>
+                    <div class="provider-rating">${p.rating}</div>
+                    <div>⏱️ ${p.time}</div>
+                    <div style="color:#4CAF50;">🔥 ${p.discount}</div>
+                </div>
+            `;
+        }).join('');
+        
+        document.getElementById('providerOptionsList').innerHTML = optionsHtml;
+        document.getElementById('providerModal').classList.add('active');
+        addAIMessage(`🛒 Showing best deals for ${category}! The 🏆 marked option is the cheapest.`);
     }
-
-    function confirmBooking() {
+    
+    function selectProvider(name, price, originalPrice, rating) {
+        selectedProvider = { name, price, originalPrice, rating };
+        document.getElementById('providerModal').classList.remove('active');
+        document.getElementById('bookingModal').style.display = 'flex';
+        addAIMessage(`Great choice! ${name} at ${price} (was ${originalPrice}). Complete your booking details.`);
+    }
+    
+    function closeProviderModal() {
+        document.getElementById('providerModal').classList.remove('active');
+    }
+    
+    async function finalizeBooking() {
         const name = document.getElementById('userName').value;
         const phone = document.getElementById('userPhone').value;
         const address = document.getElementById('userAddress').value;
-        if(!name || !phone || !address) { alert("Fill details"); return; }
+        
+        if(!name || !phone || !address) {
+            showToast("Please fill all details");
+            return;
+        }
+        if(!selectedProvider || !selectedCategory) return;
+        
         const newBooking = {
             id: Date.now(),
-            service: currentService.name,
-            provider: currentService.provider,
-            price: currentService.price,
-            name, phone, address,
+            service: selectedCategory,
+            provider: selectedProvider.name,
+            price: selectedProvider.price,
+            originalPrice: selectedProvider.originalPrice,
+            rating: selectedProvider.rating,
+            name: name,
+            phone: phone,
+            address: address,
             time: new Date().toLocaleString(),
             status: 'Confirmed'
         };
-        bookings.unshift(newBooking);
-        if(currentUser) {
-            let users = JSON.parse(localStorage.getItem('users') || '[]');
-            let userIndex = users.findIndex(u => u.email === currentUser.email);
-            users[userIndex].bookings = bookings;
-            localStorage.setItem('users', JSON.stringify(users));
-            currentUser.bookings = bookings;
-            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        
+        currentBookings.unshift(newBooking);
+        
+        try {
+            await db.collection('users').doc(currentUser.uid).update({
+                bookings: currentBookings
+            });
+            
+            closeModal();
+            showToast(`✅ ${selectedProvider.name} booked at ${selectedProvider.price}!`);
+            renderCompare();
+            renderHistory();
+            updateDashboard();
+            addNotification(`New booking: ${selectedProvider.name} confirmed!`);
+            addAIMessage(`🎉 Booking confirmed! ${selectedProvider.name} at ${selectedProvider.price}. Best deal secured!`);
+            
+            // Clear form fields
+            document.getElementById('userName').value = '';
+            document.getElementById('userPhone').value = '';
+            document.getElementById('userAddress').value = '';
+            
+            selectedProvider = null;
+            selectedCategory = null;
+        } catch(error) {
+            showToast("Error saving booking: " + error.message);
         }
-        closeModal();
-        showToast(`✅ ${currentService.name} booked!`);
-        renderCompare();
-        renderHistory();
-        updateDashboard();
-        addNotification(`New booking: ${currentService.name} confirmed!`);
-        showFakeEmailSMS("Booking Confirmed", `Your ${currentService.name} has been booked successfully.`);
-        addAIMessage(`🎉 Booking confirmed! ${currentService.name} scheduled.`);
     }
-
+    
     function renderCompare() {
         const div = document.getElementById('compareList');
         if(!div) return;
-        if(bookings.length === 0) { div.innerHTML = "<p>No bookings yet</p>"; return; }
-        div.innerHTML = `<div class="compare-header"><div>Service</div><div>Provider</div><div>Price</div><div>Status</div></div>
-        ${bookings.slice(0,5).map(b => `<div class="compare-row"><div>${b.service}</div><div>${b.provider}</div><div>${b.price}</div><div style="color:#4CAF50;">${b.status}</div></div>`).join('')}`;
+        
+        if(currentBookings.length === 0) {
+            div.innerHTML = '<p style="text-align:center; padding:2rem;">No bookings yet. Book a service to compare!</p>';
+            return;
+        }
+        
+        div.innerHTML = `
+            <div class="compare-header">
+                <div>Service</div>
+                <div>Provider</div>
+                <div>Price</div>
+                <div>Status</div>
+            </div>
+            ${currentBookings.slice(0,5).map(b => `
+                <div class="compare-row">
+                    <div>${b.service}</div>
+                    <div>${b.provider}</div>
+                    <div>${b.price}</div>
+                    <div style="color:#4CAF50;">${b.status}</div>
+                </div>
+            `).join('')}
+        `;
     }
-
+    
     function renderHistory() {
         const div = document.getElementById('historyList');
         if(!div) return;
-        if(bookings.length === 0) { div.innerHTML = "<p>No booking history</p>"; return; }
-        div.innerHTML = bookings.map(b => `<div style="padding:1rem; border-bottom:1px solid rgba(255,255,255,0.1);">
-            <strong>${b.service}</strong> - ${b.provider}<br>${b.price} | ${b.time}<br>Status: ${b.status}
-        </div>`).join('');
+        
+        if(currentBookings.length === 0) {
+            div.innerHTML = '<p style="text-align:center; padding:2rem;">No booking history</p>';
+            return;
+        }
+        
+        div.innerHTML = currentBookings.map(b => `
+            <div style="padding:1rem; border-bottom:1px solid rgba(255,255,255,0.1);">
+                <strong>${b.provider}</strong> - ${b.service}<br>
+                💰 ${b.price} ${b.originalPrice ? `(was ${b.originalPrice})` : ''}<br>
+                ⭐ ${b.rating || 'N/A'}<br>
+                📅 ${b.time}<br>
+                Status: <span style="color:#4CAF50;">${b.status}</span>
+            </div>
+        `).join('');
     }
-
+    
     function renderNearby() {
-        const nearby = ["🚗 UniRide Cab - 2 min away", "🛒 UniMart Grocery - 5 min", "🔧 UniFix Repair - 10 min", "🏥 UniHealth Clinic - 15 min"];
+        const nearby = ["🚗 Ola Cab - 2 min away", "🚙 Uber - 3 min", "🛵 Rapido - 1 min", "🛒 Blinkit - 5 min", "🥬 Zepto - 7 min", "🔧 Urban Company - 15 min", "🏥 Practo - Video consult"];
         document.getElementById('nearbyList').innerHTML = nearby.map(n => `<div class="nearby-service">${n}</div>`).join('');
     }
-
+    
     function updateDashboard() {
         const statsDiv = document.getElementById('dashboardStats');
         if(!statsDiv) return;
-        const totalRevenue = bookings.reduce((sum, b) => sum + (parseInt(b.price) || 300), 0);
-        statsDiv.innerHTML = `<div class="dashboard-stats" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:1rem;">
-            <div class="stat-card">📅 Bookings: ${bookings.length}</div>
-            <div class="stat-card">💰 Revenue: ₹${totalRevenue}</div>
-            <div class="stat-card">📈 Growth: +${bookings.length * 10}%</div>
-        </div>`;
+        
+        const totalSaved = currentBookings.reduce((sum, b) => {
+            if(b.originalPrice) {
+                const saved = parseInt(b.originalPrice.replace(/[^0-9]/g, '')) - parseInt(b.price.replace(/[^0-9]/g, ''));
+                return sum + (saved || 0);
+            }
+            return sum;
+        }, 0);
+        
+        const totalSpent = currentBookings.reduce((sum, b) => {
+            return sum + (parseInt(b.price.replace(/[^0-9]/g, '')) || 0);
+        }, 0);
+        
+        statsDiv.innerHTML = `
+            <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:1rem;">
+                <div style="background:rgba(255,255,255,0.08); padding:1rem; border-radius:16px; text-align:center;">
+                    <div style="font-size:2rem;">📅</div>
+                    <div style="font-size:1.5rem; font-weight:bold;">${currentBookings.length}</div>
+                    <div>Total Bookings</div>
+                </div>
+                <div style="background:rgba(255,255,255,0.08); padding:1rem; border-radius:16px; text-align:center;">
+                    <div style="font-size:2rem;">💰</div>
+                    <div style="font-size:1.5rem; font-weight:bold;">₹${totalSpent}</div>
+                    <div>Total Spent</div>
+                </div>
+                <div style="background:rgba(255,255,255,0.08); padding:1rem; border-radius:16px; text-align:center;">
+                    <div style="font-size:2rem;">🏆</div>
+                    <div style="font-size:1.5rem; font-weight:bold;">₹${totalSaved}</div>
+                    <div>Total Saved</div>
+                </div>
+                <div style="background:rgba(255,255,255,0.08); padding:1rem; border-radius:16px; text-align:center;">
+                    <div style="font-size:2rem;">📈</div>
+                    <div style="font-size:1.5rem; font-weight:bold;">+${currentBookings.length * 15}%</div>
+                    <div>Growth Rate</div>
+                </div>
+            </div>
+        `;
     }
-
+    
     function showSection(section) {
         document.getElementById('homeSection').style.display = section === 'home' ? 'block' : 'none';
         document.getElementById('historySection').style.display = section === 'history' ? 'block' : 'none';
         if(section === 'history') renderHistory();
     }
-
+    
     function showDashboard() {
         const dash = document.getElementById('dashboard');
-        dash.style.display = dash.style.display === 'none' ? 'block' : 'none';
-        updateDashboard();
+        if(dash.style.display === 'none') {
+            dash.style.display = 'block';
+            updateDashboard();
+        } else {
+            dash.style.display = 'none';
+        }
     }
-
-    // Notifications
+    
+    // ========== NOTIFICATION FUNCTIONS ==========
     function addNotification(msg) {
         notifications.unshift({ msg, time: new Date().toLocaleTimeString() });
         document.getElementById('notifBadge').innerText = notifications.length;
+        
         const dropdown = document.getElementById('notifDropdown');
-        dropdown.innerHTML = notifications.slice(0,5).map(n => `<div style="padding:5px; border-bottom:1px solid gray;">${n.msg}<br><small>${n.time}</small></div>`).join('');
+        dropdown.innerHTML = notifications.slice(0,5).map(n => `
+            <div style="padding:8px; border-bottom:1px solid rgba(255,255,255,0.1);">
+                <div style="font-size:0.85rem;">${n.msg}</div>
+                <div style="font-size:0.7rem; color:rgba(255,255,255,0.5);">${n.time}</div>
+            </div>
+        `).join('');
+        
         showToast(msg);
     }
-
+    
     function toggleNotifications() {
         const dropdown = document.getElementById('notifDropdown');
         dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
     }
-
-    function showFakeEmailSMS(subject, body) {
-        console.log(`📧 Email: ${subject} - ${body}`);
-        addNotification(`📧 ${subject}`);
-    }
-
+    
     function triggerEmergency() {
         addNotification("🚨 SOS Alert sent to nearby providers!");
         showToast("🚨 Emergency alert sent!");
         addAIMessage("🚨 Emergency alert activated! Help is on the way.");
-        showFakeEmailSMS("EMERGENCY ALERT", "Your SOS has been received. Help is coming.");
+        
+        // Simulate sending to providers
+        console.log("Emergency alert sent to all nearby service providers");
     }
-
-    // Theme
+    
+    // ========== UI UTILITY FUNCTIONS ==========
     function setTheme(theme) {
         document.body.classList.remove('light-mode', 'dark-mode');
         document.body.classList.add(theme + '-mode');
     }
-
-    // Toast
+    
     function showToast(msg) {
         const toast = document.getElementById('toast');
         toast.textContent = msg;
         toast.style.display = 'block';
-        setTimeout(() => toast.style.display = 'none', 3000);
+        setTimeout(() => {
+            toast.style.display = 'none';
+        }, 3000);
     }
-
+    
     function closeModal() {
         document.getElementById('bookingModal').style.display = 'none';
         document.getElementById('userName').value = '';
         document.getElementById('userPhone').value = '';
         document.getElementById('userAddress').value = '';
     }
-
-    // Chatbot
+    
+    // ========== CHATBOT FUNCTIONS ==========
     function toggleChat() {
         document.getElementById('chatWindow').classList.toggle('open');
     }
+    
     function addAIMessage(msg) {
         const container = document.getElementById('chatMessages');
-        const div = document.createElement('div');
-        div.className = 'message ai';
-        div.innerHTML = `<div class="message-bubble">${msg}</div>`;
-        container.appendChild(div);
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'message ai';
+        messageDiv.innerHTML = `<div class="message-bubble">${msg}</div>`;
+        container.appendChild(messageDiv);
         container.scrollTop = container.scrollHeight;
     }
+    
     function addUserMessage(msg) {
         const container = document.getElementById('chatMessages');
-        const div = document.createElement('div');
-        div.className = 'message user';
-        div.innerHTML = `<div class="message-bubble">${msg}</div>`;
-        container.appendChild(div);
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'message user';
+        messageDiv.innerHTML = `<div class="message-bubble">${msg}</div>`;
+        container.appendChild(messageDiv);
         container.scrollTop = container.scrollHeight;
     }
+    
     function sendMessage() {
         const input = document.getElementById('chatInput');
         const msg = input.value.trim();
         if(!msg) return;
+        
         addUserMessage(msg);
         input.value = '';
+        
         setTimeout(() => {
-            let reply = "🤖 I can help with cabs, groceries, repairs, or healthcare! Just tell me what you need.";
-            const m = msg.toLowerCase();
-            if(m.includes('cab')) reply = "🚗 Cabs: Premium (₹120-400) or Luxury (₹250-800). Book now!";
-            else if(m.includes('grocery')) reply = "🛒 Grocery: Smart Grocery (30-min) or Organic (fresh).";
-            else if(m.includes('repair')) reply = "🔧 Repairs: Expert (₹499+) or Emergency Plumber (24/7).";
-            else if(m.includes('doctor')) reply = "🏥 Healthcare: Telehealth (₹399) or Mental Health (₹499).";
+            let reply = "";
+            const lowerMsg = msg.toLowerCase();
+            
+            if(lowerMsg.includes('cab') || lowerMsg.includes('taxi') || lowerMsg.includes('ride')) {
+                reply = "🚗 CAB DEALS:\n• Rapido: ₹79 (BEST PRICE 🏆)\n• Ola: ₹99\n• Uber: ₹109\nSave up to 21%! Which one would you like to book?";
+            }
+            else if(lowerMsg.includes('grocery') || lowerMsg.includes('food') || lowerMsg.includes('vegetable')) {
+                reply = "🛒 GROCERY DEALS:\n• Zepto: ₹179 (BEST PRICE 🏆)\n• Blinkit: ₹199\n• BigBasket: ₹210\nSave up to 22%! Choose your favorite!";
+            }
+            else if(lowerMsg.includes('repair') || lowerMsg.includes('plumber') || lowerMsg.includes('ac') || lowerMsg.includes('electric')) {
+                reply = "🔧 REPAIR DEALS:\n• Urban Company: ₹399 (BEST PRICE 🏆)\n• Mr. Right: ₹449\n• Service Mandi: ₹379\nSave up to 33%! Need emergency repair? Click SOS!";
+            }
+            else if(lowerMsg.includes('doctor') || lowerMsg.includes('health') || lowerMsg.includes('medical') || lowerMsg.includes('therapy')) {
+                reply = "🏥 HEALTHCARE DEALS:\n• Tata Health: ₹299 (BEST PRICE 🏆)\n• Practo: ₹349\n• PharmEasy: ₹399\nSave up to 33%! Book video consult now!";
+            }
+            else if(lowerMsg.includes('price') || lowerMsg.includes('cost') || lowerMsg.includes('cheapest')) {
+                reply = "💰 Best prices today:\n• Cab: Rapido ₹79\n• Grocery: Zepto ₹179\n• Repair: Urban Co ₹399\n• Healthcare: Tata Health ₹299";
+            }
+            else if(lowerMsg.includes('emergency') || lowerMsg.includes('sos') || lowerMsg.includes('urgent')) {
+                reply = "🚨 EMERGENCY MODE ACTIVATED! Click the red SOS button above to instantly alert all nearby service providers. Help will arrive shortly!";
+            }
+            else if(lowerMsg.includes('hello') || lowerMsg.includes('hi') || lowerMsg.includes('hey')) {
+                reply = "👋 Hello! I'm UniServe AI, your personal assistant. Need help finding the best deals? Just tell me what you need - cab, grocery, repair, or healthcare!";
+            }
+            else {
+                reply = "🤖 I can help you find the best prices for cabs, groceries, repairs, and healthcare! Try typing:\n• 'cab' for ride deals\n• 'grocery' for food deals\n• 'repair' for service deals\n• 'doctor' for healthcare deals";
+            }
             addAIMessage(reply);
         }, 500);
     }
-
-    // Auto login check
-    const savedUser = localStorage.getItem('currentUser');
-    if(savedUser) {
-        currentUser = JSON.parse(savedUser);
-        bookings = currentUser.bookings || [];
-        document.getElementById('authContainer').style.display = 'none';
-        document.getElementById('mainApp').style.display = 'block';
-        renderServices();
-        renderCompare();
-        renderHistory();
-        updateDashboard();
-        renderNearby();
-    } else {
-        document.getElementById('authContainer').style.display = 'block';
-        document.getElementById('mainApp').style.display = 'none';
-    }
+    
+    // ========== AUTO LOGIN CHECK ==========
+    auth.onAuthStateChanged(async (user) => {
+        if(user) {
+            currentUser = user;
+            const doc = await db.collection('users').doc(user.uid).get();
+            if(doc.exists) {
+                currentBookings = doc.data().bookings || [];
+            }
+            document.getElementById('authContainer').style.display = 'none';
+            document.getElementById('mainApp').style.display = 'block';
+            renderServices();
+            renderCompare();
+            renderHistory();
+            updateDashboard();
+            renderNearby();
+            addAIMessage("👋 Welcome back! I can help you find the best deals on cabs, groceries, repairs, and healthcare. Just click on any service above!");
+        }
+    });
+    
+    // Add welcome message on page load if not logged in
+    setTimeout(() => {
+        if(!auth.currentUser) {
+            addAIMessage("👋 Welcome to UniServe AI! Please login or sign up to start comparing prices and booking services at the best rates! 🏆");
+        }
+    }, 1000);
 </script>
 </body>
 </html>
