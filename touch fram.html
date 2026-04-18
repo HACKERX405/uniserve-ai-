@@ -2,15 +2,18 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UniServe AI – Premium Firebase Backend</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>UniServe AI | Next Gen Service Platform</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#007aff">
     
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -20,79 +23,86 @@
         }
 
         body {
-            font-family: 'Inter', sans-serif;
-            transition: background 0.3s, color 0.3s;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+            background: #ffffff;
+            color: #1d1d1f;
+            -webkit-font-smoothing: antialiased;
             overflow-x: hidden;
         }
 
-        /* Light Mode */
-        body.light-mode {
-            background: #f5f7fa;
-            color: #1a1a2e;
+        /* Animated Gradient Background */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            opacity: 0.05;
+            animation: gradientShift 10s ease infinite;
         }
 
-        body.light-mode .navbar,
-        body.light-mode .service-card,
-        body.light-mode .compare-section,
-        body.light-mode .dashboard,
-        body.light-mode .modal-content,
-        body.light-mode .chat-window,
-        body.light-mode .provider-card {
-            background: rgba(255,255,255,0.95);
-            border-color: rgba(0,0,0,0.1);
-            color: #1a1a2e;
+        @keyframes gradientShift {
+            0%, 100% { opacity: 0.05; transform: scale(1); }
+            50% { opacity: 0.1; transform: scale(1.05); }
         }
 
-        body.light-mode .chat-window .chat-messages .message.ai .message-bubble {
-            background: #e0e0e0;
-            color: #1a1a2e;
+        /* Floating Particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
         }
 
-        /* Dark Mode */
-        body.dark-mode {
-            background: #0a0a1a;
-            color: #fff;
+        .particle {
+            position: absolute;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: float 15s infinite ease-in-out;
         }
 
-        body.dark-mode .navbar,
-        body.dark-mode .service-card,
-        body.dark-mode .compare-section,
-        body.dark-mode .dashboard,
-        body.dark-mode .modal-content,
-        body.dark-mode .chat-window,
-        body.dark-mode .provider-card {
-            background: rgba(255,255,255,0.05);
-            border-color: rgba(255,255,255,0.1);
-            color: #fff;
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); }
+            25% { transform: translateY(-100px) translateX(50px); }
+            50% { transform: translateY(0) translateX(100px); }
+            75% { transform: translateY(100px) translateX(50px); }
         }
 
-        body.dark-mode .chat-window .chat-messages .message.ai .message-bubble {
-            background: rgba(255,255,255,0.1);
-            color: #fff;
-        }
-
-        /* Navbar */
+        /* ========== NAVBAR ========== */
         .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255,255,255,0.95);
             backdrop-filter: blur(20px);
             padding: 1rem 5%;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            animation: slideDown 0.5s ease;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
 
         .logo {
-            font-size: 1.6rem;
-            font-weight: 700;
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
-        .logo-img {
+        .logo-icon {
             width: 40px;
             height: 40px;
             background: linear-gradient(135deg, #667eea, #764ba2);
@@ -100,360 +110,539 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            animation: pulse 2s infinite;
         }
 
-        .nav-links {
-            display: flex;
-            gap: 1.5rem;
-            align-items: center;
-            flex-wrap: wrap;
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(102,126,234,0.4); }
+            50% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(102,126,234,0); }
         }
 
-        .nav-links a, .nav-links button {
-            background: none;
-            border: none;
-            color: inherit;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: 0.3s;
-        }
-
-        .nav-links a:hover, .nav-links button:hover {
-            color: #667eea;
-        }
-
-        .theme-toggle {
-            background: rgba(128,128,128,0.2);
-            border-radius: 30px;
-            padding: 0.3rem 0.8rem;
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        /* Auth Container */
-        .auth-container {
-            max-width: 450px;
-            margin: 4rem auto;
-            padding: 2rem;
-            border-radius: 28px;
-            text-align: center;
-        }
-
-        .auth-container input {
-            width: 100%;
-            padding: 0.8rem;
-            margin: 0.5rem 0;
-            border-radius: 14px;
-            border: 1px solid #ddd;
-            background: rgba(255,255,255,0.1);
-            color: inherit;
-        }
-
-        .auth-container button {
-            width: 100%;
-            padding: 0.8rem;
-            margin: 0.5rem 0;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            border: none;
-            border-radius: 14px;
-            color: white;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        .main-app {
-            display: none;
-        }
-
-        /* Hero */
-        .hero {
-            text-align: center;
-            padding: 3rem 2rem;
-        }
-
-        .hero h1 {
-            font-size: 3rem;
+        .logo-text {
+            font-size: 1.4rem;
+            font-weight: 700;
             background: linear-gradient(135deg, #667eea, #764ba2);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
         }
 
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a, .nav-links button {
+            text-decoration: none;
+            color: #1d1d1f;
+            font-weight: 500;
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+        }
+
+        .nav-links a:hover, .nav-links button:hover {
+            background: rgba(102,126,234,0.1);
+            transform: translateY(-2px);
+        }
+
+        .theme-toggle {
+            background: #f0f0f0;
+            padding: 0.3rem 0.8rem;
+            border-radius: 30px;
+            display: flex;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+
+        /* ========== HERO WITH TYPEWRITER ========== */
+        .hero {
+            padding: 10rem 5% 5rem;
+            text-align: center;
+            position: relative;
+        }
+
         .hero-badge {
             display: inline-block;
-            background: rgba(76,175,80,0.2);
-            padding: 0.3rem 1rem;
+            background: linear-gradient(135deg, #667eea20, #764ba220);
+            padding: 0.5rem 1.2rem;
             border-radius: 50px;
-            font-size: 0.9rem;
-            margin-top: 1rem;
-            color: #4CAF50;
-        }
-
-        /* Container */
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 2rem 5%;
-        }
-
-        .section-title {
-            font-size: 1.8rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #667eea;
             margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
+            animation: fadeInUp 0.6s ease;
         }
 
-        /* Service Cards */
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 1rem;
+            animation: fadeInUp 0.6s ease 0.1s backwards;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            background-size: 200% 200%;
+            animation: gradientMove 3s ease infinite;
+        }
+
+        @keyframes gradientMove {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .typewriter-container {
+            font-size: 1.3rem;
+            color: #86868b;
+            margin-top: 1rem;
+            min-height: 3rem;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 3px;
+            margin-left: 4px;
+            background: #667eea;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* ========== SERVICE CARDS WITH ZOOM ========== */
         .services-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        @media (max-width: 1024px) {
+            .services-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 640px) {
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         .service-card {
-            border-radius: 24px;
+            background: white;
+            border-radius: 28px;
             overflow: hidden;
             cursor: pointer;
-            transition: 0.3s;
-            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            border: 1px solid rgba(0,0,0,0.05);
+            animation: fadeInUp 0.6s ease backwards;
         }
 
         .service-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-10px);
+            box-shadow: 0 30px 50px rgba(102,126,234,0.2);
+        }
+
+        .card-image-wrapper {
+            position: relative;
+            overflow: hidden;
+            height: 220px;
         }
 
         .card-image {
-            height: 160px;
+            width: 100%;
+            height: 100%;
             background-size: cover;
             background-position: center;
+            transition: transform 0.5s ease;
         }
 
-        .card-content {
-            padding: 1.2rem;
+        .service-card:hover .card-image {
+            transform: scale(1.1);
         }
 
-        .service-category {
-            font-size: 0.7rem;
-            padding: 0.2rem 0.6rem;
-            background: rgba(102,126,234,0.2);
-            border-radius: 20px;
-            display: inline-block;
-        }
-
-        .price {
-            font-size: 1.3rem;
-            font-weight: 700;
-            margin: 0.5rem 0;
-        }
-
-        .book-btn {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            border: none;
-            padding: 0.7rem;
-            border-radius: 14px;
-            color: white;
-            font-weight: 600;
-            width: 100%;
-            margin-top: 0.5rem;
-            cursor: pointer;
-        }
-
-        /* Compare Section */
-        .compare-section, .dashboard, .history-section, .map-section {
-            border-radius: 24px;
-            padding: 1.2rem;
-            margin: 1.5rem 0;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .compare-header {
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr;
-            padding: 0.8rem;
-            background: rgba(102,126,234,0.1);
-            border-radius: 12px;
-            font-weight: 600;
-        }
-
-        .compare-row {
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr;
-            padding: 0.8rem;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
-
-        /* Map */
-        .fake-map {
-            height: 250px;
-            background: linear-gradient(135deg, #1e3c72, #2a5298);
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .nearby-service {
-            background: rgba(255,255,255,0.1);
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            display: inline-block;
-            margin: 0.3rem;
-        }
-
-        /* Notification Bell */
-        .notification-bell {
-            position: relative;
-            cursor: pointer;
-        }
-
-        .notification-badge {
-            position: absolute;
-            top: -8px;
-            right: -8px;
-            background: red;
-            color: white;
-            border-radius: 50%;
-            padding: 2px 6px;
-            font-size: 0.7rem;
-        }
-
-        .notification-dropdown {
-            position: absolute;
-            top: 40px;
-            right: 0;
-            width: 280px;
-            background: rgba(0,0,0,0.9);
-            border-radius: 16px;
-            padding: 0.8rem;
-            display: none;
-            z-index: 200;
-        }
-
-        /* Provider Modal */
-        .provider-modal {
+        /* Image Modal for Zoom */
+        .image-modal {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             background: rgba(0,0,0,0.95);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(20px);
             display: none;
             justify-content: center;
             align-items: center;
             z-index: 2000;
-            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .image-modal.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .image-modal img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 20px;
+            animation: zoomIn 0.3s ease;
+        }
+
+        @keyframes zoomIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .card-content {
+            padding: 1.5rem;
+        }
+
+        .service-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea15, #764ba215);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .service-icon i {
+            font-size: 1.5rem;
+            color: #667eea;
+        }
+
+        .service-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .service-card p {
+            color: #86868b;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .price-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            padding: 0.3rem 1rem;
+            border-radius: 25px;
+            color: white;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 0.9rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 16px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.02);
+            box-shadow: 0 5px 20px rgba(102,126,234,0.4);
+        }
+
+        /* ========== COMPARE SECTION WITH BIG PRICES ========== */
+        .compare-section {
+            background: linear-gradient(135deg, #f8f9ff, #ffffff);
+            border-radius: 28px;
+            padding: 2rem;
+            margin: 3rem 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+
+        .compare-header {
+            display: grid;
+            grid-template-columns: 2fr 1.5fr 1.2fr 1fr;
+            padding: 1rem;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: #667eea;
+            border-bottom: 2px solid rgba(102,126,234,0.2);
+        }
+
+        .compare-row {
+            display: grid;
+            grid-template-columns: 2fr 1.5fr 1.2fr 1fr;
+            padding: 1rem;
+            transition: all 0.3s;
+            animation: slideIn 0.4s ease backwards;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(-20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .compare-row:hover {
+            background: linear-gradient(90deg, rgba(102,126,234,0.05), transparent);
+            transform: translateX(5px);
+        }
+
+        .compare-price {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #667eea;
+        }
+
+        /* ========== PROVIDER MODAL ========== */
+        .provider-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(20px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1500;
         }
 
         .provider-modal.active {
             display: flex;
+            animation: fadeIn 0.3s ease;
         }
 
         .provider-card {
-            background: rgba(255,255,255,0.1);
-            border-radius: 20px;
-            padding: 1.2rem;
-            margin: 0.5rem;
+            background: white;
+            border-radius: 28px;
+            padding: 1.8rem;
+            margin: 1rem;
             cursor: pointer;
-            transition: 0.3s;
+            transition: all 0.3s;
             text-align: center;
             min-width: 200px;
-            border: 2px solid transparent;
+            animation: scaleIn 0.3s ease backwards;
+        }
+
+        @keyframes scaleIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
         }
 
         .provider-card:hover {
-            transform: scale(1.05);
-            background: rgba(255,255,255,0.2);
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
         }
 
         .provider-card.best-price {
-            border-color: #4CAF50;
-            background: rgba(76,175,80,0.2);
+            border: 2px solid #34c759;
+            background: linear-gradient(135deg, #ffffff, #f0faf0);
             position: relative;
         }
 
         .provider-card.best-price::after {
-            content: "🏆 BEST PRICE";
+            content: "🏆 BEST DEAL";
             position: absolute;
-            top: -10px;
-            right: 10px;
-            background: #4CAF50;
-            padding: 2px 10px;
-            border-radius: 20px;
+            top: -12px;
+            right: -12px;
+            background: linear-gradient(135deg, #34c759, #28a745);
+            padding: 4px 12px;
+            border-radius: 30px;
             font-size: 0.7rem;
-            font-weight: bold;
+            color: white;
+            font-weight: 700;
+            animation: bounce 1s infinite;
         }
 
-        .provider-name {
-            font-size: 1.3rem;
-            font-weight: 600;
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
         }
 
         .provider-price {
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin: 0.5rem 0;
-        }
-
-        .provider-rating {
-            color: #ffc107;
-            margin: 0.3rem 0;
+            font-size: 2rem;
+            font-weight: 800;
+            color: #667eea;
+            margin: 0.8rem 0;
         }
 
         .options-container {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 1rem;
-            max-width: 900px;
+            gap: 1.5rem;
+            max-width: 1000px;
+            padding: 2rem;
         }
 
-        .close-modal {
-            position: absolute;
-            top: 20px;
-            right: 30px;
-            font-size: 2rem;
-            cursor: pointer;
-            background: none;
+        /* ========== DASHBOARD ========== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #ffffff, #f8f9ff);
+            border-radius: 24px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s;
+            border: 1px solid rgba(102,126,234,0.1);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(102,126,234,0.1);
+        }
+
+        .stat-number {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #667eea;
+        }
+
+        /* ========== AUTH WITH GOOGLE/PHONE ========== */
+        .auth-container {
+            max-width: 480px;
+            margin: 8rem auto;
+            padding: 2.5rem;
+            background: white;
+            border-radius: 32px;
+            text-align: center;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.1);
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .auth-container input {
+            width: 100%;
+            padding: 1rem;
+            margin: 0.7rem 0;
+            border-radius: 16px;
+            border: 1px solid #e5e5ea;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .auth-container input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+        }
+
+        .auth-container button {
+            width: 100%;
+            padding: 1rem;
+            margin: 0.7rem 0;
+            background: linear-gradient(135deg, #667eea, #764ba2);
             border: none;
+            border-radius: 16px;
             color: white;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
         }
 
-        /* Chatbot */
+        .auth-container button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102,126,234,0.3);
+        }
+
+        .google-btn {
+            background: white !important;
+            color: #1d1d1f !important;
+            border: 1px solid #e5e5ea !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .google-btn:hover {
+            background: #f8f9ff !important;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 1rem 0;
+            color: #86868b;
+        }
+
+        .divider::before, .divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: #e5e5ea;
+        }
+
+        .divider span {
+            padding: 0 1rem;
+        }
+
+        /* ========== CHATBOT ========== */
         .ai-chatbot {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
+            bottom: 25px;
+            right: 25px;
             z-index: 1000;
         }
 
         .chat-toggle {
-            width: 60px;
-            height: 60px;
+            width: 65px;
+            height: 65px;
             background: linear-gradient(135deg, #667eea, #764ba2);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            box-shadow: 0 5px 20px rgba(102,126,234,0.4);
+            box-shadow: 0 10px 30px rgba(102,126,234,0.4);
+            transition: all 0.3s;
+            animation: pulse 2s infinite;
+        }
+
+        .chat-toggle:hover {
+            transform: scale(1.1);
         }
 
         .chat-window {
             position: fixed;
-            bottom: 90px;
-            right: 20px;
-            width: 350px;
-            height: 450px;
-            border-radius: 24px;
+            bottom: 100px;
+            right: 25px;
+            width: 380px;
+            height: 520px;
+            background: white;
+            border-radius: 28px;
             display: none;
             flex-direction: column;
             overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
 
         .chat-window.open {
@@ -462,20 +651,28 @@
 
         .chat-header {
             background: linear-gradient(135deg, #667eea, #764ba2);
-            padding: 0.8rem;
+            padding: 1rem;
             display: flex;
             justify-content: space-between;
+            color: white;
         }
 
         .chat-messages {
             flex: 1;
-            padding: 0.8rem;
+            padding: 1rem;
             overflow-y: auto;
+            background: #f8f9ff;
         }
 
         .message {
-            margin-bottom: 0.8rem;
+            margin-bottom: 1rem;
             display: flex;
+            animation: messageSlide 0.3s ease;
+        }
+
+        @keyframes messageSlide {
+            from { transform: translateY(10px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
 
         .message.ai { justify-content: flex-start; }
@@ -483,31 +680,48 @@
 
         .message-bubble {
             max-width: 80%;
-            padding: 0.5rem 1rem;
-            border-radius: 18px;
-            font-size: 0.85rem;
+            padding: 0.8rem 1.2rem;
+            border-radius: 24px;
+            font-size: 0.9rem;
         }
 
-        .message.ai .message-bubble { background: rgba(128,128,128,0.2); }
-        .message.user .message-bubble { background: linear-gradient(135deg, #667eea, #764ba2); color: white; }
+        .message.ai .message-bubble {
+            background: white;
+            border: 1px solid #e5e5ea;
+            color: #1d1d1f;
+        }
+
+        .message.user .message-bubble {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
 
         .chat-input-area {
-            padding: 0.8rem;
+            padding: 1rem;
             display: flex;
             gap: 0.5rem;
-            border-top: 1px solid rgba(255,255,255,0.1);
+            border-top: 1px solid #e5e5ea;
+            background: white;
         }
 
         .chat-input-area input {
             flex: 1;
-            padding: 0.5rem;
-            border-radius: 20px;
-            border: none;
-            background: rgba(128,128,128,0.2);
-            color: inherit;
+            padding: 0.8rem;
+            border-radius: 25px;
+            border: 1px solid #e5e5ea;
+            font-size: 0.9rem;
         }
 
-        /* Modal */
+        .chat-input-area button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            padding: 0.8rem 1.2rem;
+            border-radius: 25px;
+            color: white;
+            cursor: pointer;
+        }
+
+        /* ========== MODAL ========== */
         .modal {
             display: none;
             position: fixed;
@@ -515,161 +729,231 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.8);
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(10px);
             justify-content: center;
             align-items: center;
-            z-index: 1001;
+            z-index: 1100;
         }
 
         .modal-content {
-            border-radius: 24px;
-            padding: 1.5rem;
+            background: white;
+            border-radius: 32px;
+            padding: 2rem;
             width: 90%;
-            max-width: 400px;
+            max-width: 450px;
+            animation: scaleIn 0.3s ease;
         }
 
-        .modal-content input, .modal-content select {
-            width: 100%;
-            padding: 0.7rem;
-            margin: 0.5rem 0;
-            border-radius: 12px;
-            border: 1px solid #ddd;
-            background: rgba(128,128,128,0.1);
-            color: inherit;
+        /* ========== DARK MODE ========== */
+        body.dark-mode {
+            background: #000000;
+            color: #ffffff;
+        }
+
+        body.dark-mode .navbar {
+            background: rgba(0,0,0,0.95);
+        }
+
+        body.dark-mode .service-card,
+        body.dark-mode .compare-section,
+        body.dark-mode .stat-card,
+        body.dark-mode .modal-content,
+        body.dark-mode .auth-container,
+        body.dark-mode .chat-window {
+            background: #1c1c1e;
+            border-color: #2c2c2e;
+        }
+
+        body.dark-mode .provider-card {
+            background: #1c1c1e;
+        }
+
+        body.dark-mode .chat-messages {
+            background: #1c1c1e;
+        }
+
+        body.dark-mode .message.ai .message-bubble {
+            background: #2c2c2e;
+            color: white;
+        }
+
+        /* ========== UTILITIES ========== */
+        .main-app {
+            display: none;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            text-align: center;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
         }
 
         .toast {
             position: fixed;
-            bottom: 20px;
-            left: 20px;
-            background: #4CAF50;
-            padding: 0.8rem 1.5rem;
-            border-radius: 12px;
+            bottom: 25px;
+            left: 25px;
+            background: linear-gradient(135deg, #34c759, #28a745);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 16px;
             display: none;
-            z-index: 1000;
+            z-index: 1200;
+            animation: slideInLeft 0.3s ease;
+        }
+
+        @keyframes fadeInUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes slideInLeft {
+            from { transform: translateX(-50px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
         }
 
         @media (max-width: 768px) {
-            .hero h1 { font-size: 2rem; }
-            .nav-links { gap: 0.8rem; font-size: 0.8rem; }
-            .compare-header, .compare-row { grid-template-columns: 1fr 1fr; gap: 0.5rem; }
-            .chat-window { width: 300px; right: 10px; }
-            .options-container { flex-direction: column; align-items: center; }
-            .provider-card { width: 90%; }
+            .hero h1 { font-size: 2.5rem; }
+            .nav-links { gap: 0.8rem; }
+            .chat-window { width: 320px; right: 16px; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
         }
     </style>
 </head>
-<body class="dark-mode">
+<body>
 
-<!-- Main App (Hidden until login) -->
+<div class="animated-bg"></div>
+<div class="particles" id="particles"></div>
+
+<!-- Main App -->
 <div class="main-app" id="mainApp">
-    <!-- Navbar -->
     <nav class="navbar">
         <div class="logo">
-            <div class="logo-img"><i class="fas fa-brain"></i></div>
-            UniServe AI
+            <div class="logo-icon"><i class="fas fa-brain"></i></div>
+            <span class="logo-text">UniServe AI</span>
         </div>
         <div class="nav-links">
             <a onclick="showSection('home')">Home</a>
             <a onclick="showSection('history')">History</a>
-            <a onclick="showDashboard()">Dashboard</a>
+            <a onclick="showDashboard()">Analytics</a>
             <div class="theme-toggle">
-                <i class="fas fa-sun" onclick="setTheme('light')" style="cursor:pointer;"></i>
-                <i class="fas fa-moon" onclick="setTheme('dark')" style="cursor:pointer;"></i>
+                <i class="fas fa-sun" onclick="setTheme('light')"></i>
+                <i class="fas fa-moon" onclick="setTheme('dark')"></i>
             </div>
-            <div class="notification-bell" onclick="toggleNotifications()">
+            <div class="notification-bell" onclick="toggleNotifications()" style="position: relative; cursor: pointer;">
                 <i class="fas fa-bell"></i>
-                <span class="notification-badge" id="notifBadge">0</span>
-                <div class="notification-dropdown" id="notifDropdown"></div>
+                <span class="notification-badge" id="notifBadge" style="position: absolute; top: -8px; right: -8px; background: #ff3b30; color: white; border-radius: 50%; padding: 2px 6px; font-size: 0.7rem;">0</span>
+                <div id="notifDropdown" style="position: absolute; top: 40px; right: 0; width: 280px; background: white; border-radius: 16px; padding: 0.8rem; display: none; z-index: 200; box-shadow: 0 10px 30px rgba(0,0,0,0.1);"></div>
             </div>
-            <button onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            <button onclick="logout()">Sign Out</button>
         </div>
     </nav>
 
-    <div class="container">
-        <!-- Home Section -->
-        <div id="homeSection">
-            <section class="hero">
-                <h1>AI-Powered Best Price Compare</h1>
-                <p>Compare Ola, Uber, Rapido, Blinkit, Zepto, Urban Company & more!</p>
-                <div class="hero-badge"><i class="fas fa-trophy"></i> Best Price Guaranteed 🏆</div>
-            </section>
+    <div class="hero">
+        <div class="hero-badge">✨ AI-Powered Price Comparison Platform</div>
+        <h1>Welcome to <span class="gradient-text">UniServe AI</span></h1>
+        <div class="typewriter-container" id="typewriter"></div>
+    </div>
 
-            <div class="section-title"><i class="fas fa-grid-2"></i><h2>Available Services</h2></div>
+    <div class="container">
+        <div id="homeSection">
+            <div class="section-title">Choose Your Service</div>
             <div class="services-grid" id="servicesGrid"></div>
 
-            <div class="section-title"><i class="fas fa-chart-simple"></i><h2>Recent Bookings</h2></div>
+            <div class="section-title">Compare & Save</div>
             <div class="compare-section" id="compareSection">
                 <div id="compareList"></div>
             </div>
 
-            <div class="section-title"><i class="fas fa-map-marker-alt"></i><h2>Nearby Services</h2></div>
-            <div class="map-section" id="mapSection">
-                <div class="fake-map">
-                    <i class="fas fa-map-marked-alt" style="font-size:3rem;"></i>
-                    <p>📍 Nearby Providers:</p>
-                    <div id="nearbyList"></div>
-                </div>
+            <div class="section-title">Nearby Services</div>
+            <div class="map-section" style="background: linear-gradient(135deg, #f8f9ff, #ffffff); border-radius: 28px; padding: 2rem; text-align: center;">
+                <div id="nearbyList"></div>
             </div>
 
-            <div class="emergency" style="background: linear-gradient(135deg, #ff6b6b, #ee5a24); border-radius:24px; padding:1.5rem; text-align:center; margin:1.5rem 0;">
-                <h2><i class="fas fa-bell"></i> 24/7 Emergency Response</h2>
-                <button class="emergency-btn" onclick="triggerEmergency()" style="background:white; color:#ff6b6b; border:none; padding:0.8rem 2rem; border-radius:50px; margin-top:1rem; cursor:pointer;">SOS Emergency</button>
+            <div class="emergency" onclick="triggerEmergency()" style="background: linear-gradient(135deg, #fff0f0, #ffe0e0); border-radius: 28px; padding: 2rem; text-align: center; margin: 2rem 0; cursor: pointer; transition: all 0.3s;">
+                <h3 style="color: #ff3b30;"><i class="fas fa-phone-alt"></i> Emergency SOS - 24/7</h3>
+                <p style="margin-top: 0.5rem;">Tap for immediate assistance</p>
             </div>
 
-            <div class="dashboard" id="dashboard" style="display:none;">
-                <div class="section-title"><i class="fas fa-chart-line"></i><h2>Provider Dashboard</h2></div>
-                <div id="dashboardStats"></div>
-            </div>
+            <div class="stats-grid" id="dashboardStats" style="display: none;"></div>
         </div>
 
-        <!-- History Section -->
-        <div id="historySection" style="display:none;">
-            <div class="section-title"><i class="fas fa-history"></i><h2>Booking History</h2></div>
-            <div class="history-section" id="historyList"></div>
+        <div id="historySection" style="display: none;">
+            <div class="section-title">Your Booking History</div>
+            <div class="history-section" id="historyList" style="background: white; border-radius: 24px; padding: 1rem;"></div>
         </div>
     </div>
 </div>
 
+<!-- Image Zoom Modal -->
+<div class="image-modal" id="imageModal" onclick="closeImageModal()">
+    <img id="modalImage" src="">
+</div>
+
 <!-- Provider Modal -->
 <div class="provider-modal" id="providerModal">
-    <button class="close-modal" onclick="closeProviderModal()">&times;</button>
+    <button class="close-modal" onclick="closeProviderModal()" style="position: absolute; top: 20px; right: 30px; font-size: 2rem; background: none; border: none; color: white; cursor: pointer;">✕</button>
     <div class="options-container" id="providerOptionsList"></div>
 </div>
 
 <!-- Auth Container -->
 <div id="authContainer" class="auth-container">
-    <h2><i class="fas fa-user-astronaut"></i> Welcome to UniServe AI</h2>
-    <p>Login or Sign Up to continue</p>
-    <div style="display:flex; gap:1rem; margin:1rem 0;">
-        <button onclick="showAuthForm('login')" style="flex:1;">Login</button>
-        <button onclick="showAuthForm('signup')" style="flex:1;">Sign Up</button>
+    <div style="font-size: 3rem; margin-bottom: 1rem;">✨</div>
+    <h2 style="margin-bottom: 0.5rem;">Welcome to <span class="gradient-text">UniServe AI</span></h2>
+    <p style="color: #86868b; margin-bottom: 1.5rem;">Sign in to start saving</p>
+    
+    <button class="google-btn" onclick="signInWithGoogle()" style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+        <i class="fab fa-google"></i> Continue with Google
+    </button>
+    
+    <div class="divider"><span>or</span></div>
+    
+    <div style="display: flex; gap: 1rem;">
+        <button onclick="showAuthForm('login')" style="flex: 1;">Login</button>
+        <button onclick="showAuthForm('signup')" style="flex: 1;">Sign Up</button>
     </div>
+    
     <div id="loginForm">
         <input type="email" id="loginEmail" placeholder="Email">
         <input type="password" id="loginPassword" placeholder="Password">
-        <button onclick="handleLogin()">Login</button>
+        <button onclick="handleLogin()">Sign In</button>
     </div>
-    <div id="signupForm" style="display:none;">
+    
+    <div id="signupForm" style="display: none;">
         <input type="text" id="signupName" placeholder="Full Name">
         <input type="email" id="signupEmail" placeholder="Email">
         <input type="password" id="signupPassword" placeholder="Password">
         <button onclick="handleSignup()">Create Account</button>
     </div>
+    
+    <p style="margin-top: 1rem; font-size: 0.8rem; color: #86868b;">By continuing, you agree to our Terms & Conditions</p>
 </div>
 
-<!-- AI Chatbot -->
+<!-- Chatbot -->
 <div class="ai-chatbot">
     <div class="chat-window" id="chatWindow">
         <div class="chat-header">
-            <h4><i class="fas fa-robot"></i> AI Assistant</h4>
-            <button class="close-chat" onclick="toggleChat()">×</button>
+            <span><i class="fas fa-robot"></i> UniServe AI Assistant</span>
+            <button onclick="toggleChat()" style="background: none; border: none; color: white; font-size: 1.2rem; cursor: pointer;">✕</button>
         </div>
         <div class="chat-messages" id="chatMessages">
-            <div class="message ai"><div class="message-bubble">👋 Hi! Type 'cab', 'grocery', 'repair', or 'doctor' for best deals!</div></div>
+            <div class="message ai">
+                <div class="message-bubble">✨ Hi! I'm your AI savings assistant. Try "cab", "grocery", "repair", or "doctor" for best deals!</div>
+            </div>
         </div>
         <div class="chat-input-area">
-            <input type="text" id="chatInput" placeholder="Ask me..." onkeypress="if(event.key==='Enter') sendMessage()">
+            <input type="text" id="chatInput" placeholder="Ask anything..." onkeypress="if(event.key==='Enter') sendMessage()">
             <button onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
         </div>
     </div>
@@ -681,25 +965,68 @@
 <!-- Booking Modal -->
 <div class="modal" id="bookingModal">
     <div class="modal-content">
-        <h3>Complete Booking</h3>
+        <h3 style="margin-bottom: 1rem;">Complete Your Booking</h3>
         <input type="text" id="userName" placeholder="Full Name">
-        <input type="tel" id="userPhone" placeholder="Phone">
+        <input type="tel" id="userPhone" placeholder="Phone Number">
         <input type="text" id="userAddress" placeholder="Address">
-        <select id="paymentMethod">
-            <option>Credit Card</option>
-            <option>UPI</option>
-            <option>Cash</option>
-        </select>
-        <button class="book-btn" onclick="finalizeBooking()">Confirm</button>
-        <button onclick="closeModal()">Cancel</button>
+        <button class="btn-primary" onclick="finalizeBooking()">Confirm Booking</button>
+        <button onclick="closeModal()" style="margin-top: 0.5rem; background: none; border: 1px solid #e5e5ea;">Cancel</button>
     </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-    // ========== FIREBASE CONFIGURATION ==========
-    // 🔥 YAHAN APNI FIREBASE CONFIG PASTE KARO 🔥
+    // Particles Generation
+    function createParticles() {
+        const container = document.getElementById('particles');
+        for(let i = 0; i < 60; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.width = Math.random() * 8 + 2 + 'px';
+            particle.style.height = particle.style.width;
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.top = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 20 + 's';
+            particle.style.animationDuration = 15 + Math.random() * 20 + 's';
+            container.appendChild(particle);
+        }
+    }
+    createParticles();
+
+    // Typewriter Effect
+    const phrases = [
+        "Save up to 33% on every booking 🚀",
+        "Compare prices from top providers 💰",
+        "AI-powered best deals instantly 🤖",
+        "Your smart savings companion ✨"
+    ];
+    let phraseIndex = 0;
+    let charIndex = 0;
+    let isDeleting = false;
+
+    function typeWriter() {
+        const currentPhrase = phrases[phraseIndex];
+        if(isDeleting) {
+            document.getElementById('typewriter').innerHTML = currentPhrase.substring(0, charIndex - 1) + '<span class="cursor">|</span>';
+            charIndex--;
+            if(charIndex === 0) {
+                isDeleting = false;
+                phraseIndex = (phraseIndex + 1) % phrases.length;
+            }
+        } else {
+            document.getElementById('typewriter').innerHTML = currentPhrase.substring(0, charIndex + 1) + '<span class="cursor">|</span>';
+            charIndex++;
+            if(charIndex === currentPhrase.length) {
+                isDeleting = true;
+                setTimeout(() => {}, 2000);
+            }
+        }
+        setTimeout(typeWriter, isDeleting ? 50 : 100);
+    }
+    setTimeout(typeWriter, 500);
+
+    // Firebase Config
     const firebaseConfig = {
         apiKey: "AIzaSyAbboVcvYbXTgmU_UU3b5NwoiR9XUT3Zwk",
         authDomain: "uniserve-ai.firebaseapp.com",
@@ -709,51 +1036,81 @@
         appId: "1:39151119059:web:b552624e9d0f58054b0226"
     };
     
-    // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
     
-    // ========== MULTI-PROVIDER DATA ==========
-    const multiProviders = {
-        transport: [
-            { name: "🚗 Ola", price: "₹99", originalPrice: "₹120", rating: "4.8⭐", time: "5 min", discount: "21% OFF" },
-            { name: "🚙 Uber", price: "₹109", originalPrice: "₹130", rating: "4.9⭐", time: "4 min", discount: "16% OFF" },
-            { name: "🛵 Rapido", price: "₹79", originalPrice: "₹100", rating: "4.7⭐", time: "7 min", discount: "21% OFF", best: true }
+    // Google Sign In
+    async function signInWithGoogle() {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        try {
+            const result = await auth.signInWithPopup(provider);
+            const user = result.user;
+            const docRef = db.collection('users').doc(user.uid);
+            const doc = await docRef.get();
+            if(!doc.exists) {
+                await docRef.set({ name: user.displayName || user.email, email: user.email, bookings: [], photoURL: user.photoURL || '' });
+            }
+            toast("Welcome " + (user.displayName || user.email) + "! 🎉");
+            location.reload();
+        } catch(error) {
+            toast(error.message);
+        }
+    }
+    
+    // PWA Install
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        setTimeout(() => {
+            if(deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt = null;
+            }
+        }, 5000);
+    });
+    
+    if('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js').catch(console.log);
+    }
+    
+    // Data with Images
+    const providers = {
+        cab: [
+            { name: "Ola", price: "₹99", original: "₹120", rating: "4.8", time: "5 min", image: "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=400&h=250&fit=crop" },
+            { name: "Uber", price: "₹109", original: "₹130", rating: "4.9", time: "4 min", image: "https://images.unsplash.com/photo-1550355291-bbee04a92027?w=400&h=250&fit=crop" },
+            { name: "Rapido", price: "₹79", original: "₹100", rating: "4.7", time: "7 min", best: true, image: "https://images.unsplash.com/photo-1600376444960-9fc72c78ebc9?w=400&h=250&fit=crop" }
         ],
         grocery: [
-            { name: "🛒 Blinkit", price: "₹199", originalPrice: "₹250", rating: "4.8⭐", time: "10 min", discount: "20% OFF" },
-            { name: "🥬 Zepto", price: "₹179", originalPrice: "₹230", rating: "4.7⭐", time: "12 min", discount: "22% OFF", best: true },
-            { name: "🍎 BigBasket", price: "₹210", originalPrice: "₹260", rating: "4.6⭐", time: "20 min", discount: "19% OFF" }
+            { name: "Blinkit", price: "₹199", original: "₹250", rating: "4.8", time: "10 min", image: "https://images.unsplash.com/photo-1542838132-92c53300491e?w=400&h=250&fit=crop" },
+            { name: "Zepto", price: "₹179", original: "₹230", rating: "4.7", time: "12 min", best: true, image: "https://images.unsplash.com/photo-1488459716781-31db52582fe9?w=400&h=250&fit=crop" },
+            { name: "BigBasket", price: "₹210", original: "₹260", rating: "4.6", time: "20 min", image: "https://images.unsplash.com/photo-1542838132-92c53300491e?w=400&h=250&fit=crop" }
         ],
         repair: [
-            { name: "🔧 Urban Company", price: "₹399", originalPrice: "₹599", rating: "4.9⭐", time: "30 min", discount: "33% OFF", best: true },
-            { name: "⚡ Mr. Right", price: "₹449", originalPrice: "₹650", rating: "4.7⭐", time: "45 min", discount: "31% OFF" },
-            { name: "🔨 Service Mandi", price: "₹379", originalPrice: "₹550", rating: "4.6⭐", time: "60 min", discount: "31% OFF" }
+            { name: "Urban Company", price: "₹399", original: "₹599", rating: "4.9", time: "30 min", best: true, image: "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=400&h=250&fit=crop" },
+            { name: "Mr. Right", price: "₹449", original: "₹650", rating: "4.7", time: "45 min", image: "https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=400&h=250&fit=crop" }
         ],
         healthcare: [
-            { name: "🏥 Practo", price: "₹349", originalPrice: "₹499", rating: "4.9⭐", time: "Video consult", discount: "30% OFF", best: true },
-            { name: "💊 PharmEasy", price: "₹399", originalPrice: "₹550", rating: "4.7⭐", time: "Chat consult", discount: "27% OFF" },
-            { name: "🩺 Tata Health", price: "₹299", originalPrice: "₹450", rating: "4.8⭐", time: "Video consult", discount: "33% OFF" }
+            { name: "Practo", price: "₹349", original: "₹499", rating: "4.9", time: "Video", image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=400&h=250&fit=crop" },
+            { name: "Tata Health", price: "₹299", original: "₹450", rating: "4.8", time: "Video", best: true, image: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=400&h=250&fit=crop" }
         ]
     };
-
-    // Services Data with Images
+    
     const services = [
-        { id: 1, name: "Premium Cab", category: "transport", image: "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=500&h=160&fit=crop" },
-        { id: 2, name: "Smart Grocery", category: "grocery", image: "https://images.unsplash.com/photo-1542838132-92c53300491e?w=500&h=160&fit=crop" },
-        { id: 3, name: "Expert Repair", category: "repair", image: "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=500&h=160&fit=crop" },
-        { id: 4, name: "Telehealth", category: "healthcare", image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=500&h=160&fit=crop" }
+        { id: 1, name: "Cab", category: "cab", icon: "fa-taxi", desc: "Compare Ola, Uber, Rapido", price: "₹79", image: "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=600&h=300&fit=crop" },
+        { id: 2, name: "Grocery", category: "grocery", icon: "fa-basket-shopping", desc: "Blinkit, Zepto, BigBasket", price: "₹179", image: "https://images.unsplash.com/photo-1542838132-92c53300491e?w=600&h=300&fit=crop" },
+        { id: 3, name: "Repair", category: "repair", icon: "fa-wrench", desc: "Urban Company & more", price: "₹399", image: "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=600&h=300&fit=crop" },
+        { id: 4, name: "Healthcare", category: "healthcare", icon: "fa-stethoscope", desc: "Practo, Tata Health", price: "₹299", image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=600&h=300&fit=crop" }
     ];
-
-    // ========== GLOBAL VARIABLES ==========
+    
     let currentUser = null;
-    let currentBookings = [];
+    let bookings = [];
     let notifications = [];
     let selectedProvider = null;
     let selectedCategory = null;
-
-    // ========== AUTHENTICATION FUNCTIONS ==========
+    
+    // Auth
     function showAuthForm(type) {
         document.getElementById('loginForm').style.display = type === 'login' ? 'block' : 'none';
         document.getElementById('signupForm').style.display = type === 'signup' ? 'block' : 'none';
@@ -762,117 +1119,93 @@
     async function handleSignup() {
         const name = document.getElementById('signupName').value;
         const email = document.getElementById('signupEmail').value;
-        const password = document.getElementById('signupPassword').value;
-        
-        if(!name || !email || !password) {
-            showToast("Please fill all fields");
-            return;
-        }
-        
+        const pwd = document.getElementById('signupPassword').value;
+        if(!name || !email || !pwd) { toast("Fill all fields"); return; }
         try {
-            const userCred = await auth.createUserWithEmailAndPassword(email, password);
-            await db.collection('users').doc(userCred.user.uid).set({
-                name: name,
-                email: email,
-                bookings: [],
-                createdAt: new Date()
-            });
-            showToast("Signup successful! Please login.");
+            const user = await auth.createUserWithEmailAndPassword(email, pwd);
+            await db.collection('users').doc(user.user.uid).set({ name, email, bookings: [] });
+            toast("Account created! Please login.");
             showAuthForm('login');
-            document.getElementById('signupName').value = '';
-            document.getElementById('signupEmail').value = '';
-            document.getElementById('signupPassword').value = '';
-        } catch(error) {
-            showToast(error.message);
-        }
+        } catch(e) { toast(e.message); }
     }
     
     async function handleLogin() {
         const email = document.getElementById('loginEmail').value;
-        const password = document.getElementById('loginPassword').value;
-        
+        const pwd = document.getElementById('loginPassword').value;
         try {
-            const userCred = await auth.signInWithEmailAndPassword(email, password);
-            currentUser = userCred.user;
-            
+            const user = await auth.signInWithEmailAndPassword(email, pwd);
+            currentUser = user.user;
             const doc = await db.collection('users').doc(currentUser.uid).get();
-            if(doc.exists) {
-                currentBookings = doc.data().bookings || [];
-            }
-            
+            bookings = doc.exists ? doc.data().bookings || [] : [];
             document.getElementById('authContainer').style.display = 'none';
             document.getElementById('mainApp').style.display = 'block';
-            
-            renderServices();
-            renderCompare();
-            renderHistory();
-            updateDashboard();
-            renderNearby();
-            addNotification("Welcome back, " + (doc.data()?.name || email) + "! 🎉");
-            showToast("Login successful!");
-        } catch(error) {
-            showToast("Invalid email or password");
-        }
+            renderAll();
+            toast("Welcome back, " + (doc.data()?.name || email) + "! 🎉");
+            addAIMessage("👋 Welcome back! Ready to save some money today?");
+        } catch(e) { toast("Invalid credentials"); }
     }
     
     async function logout() {
         await auth.signOut();
-        currentUser = null;
-        currentBookings = [];
-        document.getElementById('authContainer').style.display = 'block';
-        document.getElementById('mainApp').style.display = 'none';
-        showToast("Logged out successfully");
+        location.reload();
     }
     
-    // ========== RENDER FUNCTIONS ==========
+    // Render
+    function renderAll() {
+        renderServices();
+        renderCompare();
+        renderHistory();
+        renderNearby();
+        updateDashboard();
+    }
+    
+    function openImageModal(imageUrl) {
+        document.getElementById('modalImage').src = imageUrl;
+        document.getElementById('imageModal').classList.add('active');
+    }
+    
+    function closeImageModal() {
+        document.getElementById('imageModal').classList.remove('active');
+    }
+    
     function renderServices() {
         const grid = document.getElementById('servicesGrid');
-        if(!grid) return;
-        
-        grid.innerHTML = services.map(s => `
-            <div class="service-card" onclick="showProviderOptions('${s.category}')">
-                <div class="card-image" style="background-image: url('${s.image}');"></div>
+        grid.innerHTML = services.map((s, idx) => `
+            <div class="service-card" style="animation-delay: ${idx * 0.1}s">
+                <div class="card-image-wrapper" onclick="event.stopPropagation(); openImageModal('${s.image}')">
+                    <div class="card-image" style="background-image: url('${s.image}');"></div>
+                </div>
                 <div class="card-content">
-                    <span class="service-category">${s.category}</span>
+                    <div class="service-icon"><i class="fas ${s.icon}"></i></div>
                     <h3>${s.name}</h3>
-                    <div>Compare: Ola, Uber, Rapido and more!</div>
-                    <div class="price">Starting ₹79 only!</div>
-                    <button class="book-btn">Compare & Book 🏆</button>
+                    <p>${s.desc}</p>
+                    <div class="price-badge">From ${s.price}</div>
+                    <button class="btn-primary" onclick="event.stopPropagation(); showOptions('${s.category}')">Compare & Book →</button>
                 </div>
             </div>
         `).join('');
     }
     
-    function showProviderOptions(category) {
-        selectedCategory = category;
-        const providers = multiProviders[category];
-        if(!providers) return;
-        
-        const bestPrice = Math.min(...providers.map(p => parseInt(p.price.replace(/[^0-9]/g, ''))));
-        
-        const optionsHtml = providers.map(p => {
-            const isBest = parseInt(p.price.replace(/[^0-9]/g, '')) === bestPrice;
-            return `
-                <div class="provider-card ${isBest ? 'best-price' : ''}" onclick="selectProvider('${p.name}', '${p.price}', '${p.originalPrice}', '${p.rating}')">
-                    <div class="provider-name">${p.name}</div>
-                    <div class="provider-price">${p.price} <span style="font-size:0.8rem; text-decoration:line-through; color:gray;">${p.originalPrice}</span></div>
-                    <div class="provider-rating">${p.rating}</div>
-                    <div>⏱️ ${p.time}</div>
-                    <div style="color:#4CAF50;">🔥 ${p.discount}</div>
-                </div>
-            `;
-        }).join('');
-        
-        document.getElementById('providerOptionsList').innerHTML = optionsHtml;
+    function showOptions(cat) {
+        selectedCategory = cat;
+        const items = providers[cat];
+        const bestPrice = Math.min(...items.map(p => parseInt(p.price.replace(/[^0-9]/g, ''))));
+        document.getElementById('providerOptionsList').innerHTML = items.map((p, idx) => `
+            <div class="provider-card ${parseInt(p.price.replace(/[^0-9]/g, '')) === bestPrice ? 'best-price' : ''}" style="animation-delay: ${idx * 0.05}s" onclick="selectProvider('${p.name}', '${p.price}', '${p.rating}')">
+                <div style="font-weight: 700; font-size: 1.1rem;">${p.name}</div>
+                <div class="provider-price">${p.price}</div>
+                <div style="text-decoration: line-through; color: #86868b;">${p.original}</div>
+                <div style="margin: 0.5rem 0;">⭐ ${p.rating} | ⏱️ ${p.time}</div>
+                <button class="btn-primary" style="padding: 0.6rem;">Select</button>
+            </div>
+        `).join('');
         document.getElementById('providerModal').classList.add('active');
-        addAIMessage(`🛒 Showing best deals for ${category}! The 🏆 marked option is the cheapest.`);
     }
     
-    function selectProvider(name, price, originalPrice, rating) {
-        selectedProvider = { name, price, originalPrice, rating };
+    function selectProvider(name, price, rating) {
+        selectedProvider = { name, price, rating };
         document.getElementById('providerModal').classList.remove('active');
         document.getElementById('bookingModal').style.display = 'flex';
-        addAIMessage(`Great choice! ${name} at ${price} (was ${originalPrice}). Complete your booking details.`);
     }
     
     function closeProviderModal() {
@@ -882,64 +1215,31 @@
     async function finalizeBooking() {
         const name = document.getElementById('userName').value;
         const phone = document.getElementById('userPhone').value;
-        const address = document.getElementById('userAddress').value;
-        
-        if(!name || !phone || !address) {
-            showToast("Please fill all details");
-            return;
-        }
-        if(!selectedProvider || !selectedCategory) return;
+        const addr = document.getElementById('userAddress').value;
+        if(!name || !phone || !addr) { toast("Fill all details"); return; }
         
         const newBooking = {
             id: Date.now(),
             service: selectedCategory,
             provider: selectedProvider.name,
             price: selectedProvider.price,
-            originalPrice: selectedProvider.originalPrice,
             rating: selectedProvider.rating,
-            name: name,
-            phone: phone,
-            address: address,
+            name, phone, addr,
             time: new Date().toLocaleString(),
-            status: 'Confirmed'
+            status: "Confirmed"
         };
         
-        currentBookings.unshift(newBooking);
-        
-        try {
-            await db.collection('users').doc(currentUser.uid).update({
-                bookings: currentBookings
-            });
-            
-            closeModal();
-            showToast(`✅ ${selectedProvider.name} booked at ${selectedProvider.price}!`);
-            renderCompare();
-            renderHistory();
-            updateDashboard();
-            addNotification(`New booking: ${selectedProvider.name} confirmed!`);
-            addAIMessage(`🎉 Booking confirmed! ${selectedProvider.name} at ${selectedProvider.price}. Best deal secured!`);
-            
-            // Clear form fields
-            document.getElementById('userName').value = '';
-            document.getElementById('userPhone').value = '';
-            document.getElementById('userAddress').value = '';
-            
-            selectedProvider = null;
-            selectedCategory = null;
-        } catch(error) {
-            showToast("Error saving booking: " + error.message);
-        }
+        bookings.unshift(newBooking);
+        await db.collection('users').doc(currentUser.uid).update({ bookings });
+        closeModal();
+        toast(`✓ ${selectedProvider.name} booked at ${selectedProvider.price}! 🎉`);
+        renderAll();
+        addAIMessage(`🎉 Great choice! ${selectedProvider.name} booked at ${selectedProvider.price}. You saved ${Math.floor(Math.random() * 50) + 20} rupees!`);
     }
     
     function renderCompare() {
         const div = document.getElementById('compareList');
-        if(!div) return;
-        
-        if(currentBookings.length === 0) {
-            div.innerHTML = '<p style="text-align:center; padding:2rem;">No bookings yet. Book a service to compare!</p>';
-            return;
-        }
-        
+        if(!bookings.length) { div.innerHTML = '<div style="text-align: center; padding: 2rem; color: #86868b;">✨ No bookings yet. Start saving!</div>'; return; }
         div.innerHTML = `
             <div class="compare-header">
                 <div>Service</div>
@@ -947,12 +1247,12 @@
                 <div>Price</div>
                 <div>Status</div>
             </div>
-            ${currentBookings.slice(0,5).map(b => `
-                <div class="compare-row">
-                    <div>${b.service}</div>
-                    <div>${b.provider}</div>
-                    <div>${b.price}</div>
-                    <div style="color:#4CAF50;">${b.status}</div>
+            ${bookings.slice(0,5).map((b, idx) => `
+                <div class="compare-row" style="animation-delay: ${idx * 0.05}s">
+                    <div><i class="fas fa-${b.service === 'cab' ? 'car' : b.service === 'grocery' ? 'basket-shopping' : b.service === 'repair' ? 'wrench' : 'stethoscope'}"></i> ${b.service}</div>
+                    <div><strong>${b.provider}</strong></div>
+                    <div class="compare-price">${b.price}</div>
+                    <div style="color: #34c759;">✓ ${b.status}</div>
                 </div>
             `).join('')}
         `;
@@ -960,68 +1260,32 @@
     
     function renderHistory() {
         const div = document.getElementById('historyList');
-        if(!div) return;
-        
-        if(currentBookings.length === 0) {
-            div.innerHTML = '<p style="text-align:center; padding:2rem;">No booking history</p>';
-            return;
-        }
-        
-        div.innerHTML = currentBookings.map(b => `
-            <div style="padding:1rem; border-bottom:1px solid rgba(255,255,255,0.1);">
-                <strong>${b.provider}</strong> - ${b.service}<br>
-                💰 ${b.price} ${b.originalPrice ? `(was ${b.originalPrice})` : ''}<br>
-                ⭐ ${b.rating || 'N/A'}<br>
-                📅 ${b.time}<br>
-                Status: <span style="color:#4CAF50;">${b.status}</span>
+        if(!bookings.length) { div.innerHTML = '<div style="text-align: center; padding: 2rem; color: #86868b;">📭 No history yet</div>'; return; }
+        div.innerHTML = bookings.map((b, idx) => `
+            <div style="padding: 1rem; border-bottom: 1px solid #e5e5ea; animation: fadeInUp 0.3s ease ${idx * 0.05}s backwards;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div><strong style="color: #667eea;">${b.provider}</strong> — ${b.service}</div>
+                    <div style="font-weight: 700; color: #34c759;">${b.price}</div>
+                </div>
+                <div style="font-size: 0.8rem; color: #86868b; margin-top: 0.3rem;"><i class="fas fa-calendar"></i> ${b.time}</div>
             </div>
         `).join('');
     }
     
     function renderNearby() {
-        const nearby = ["🚗 Ola Cab - 2 min away", "🚙 Uber - 3 min", "🛵 Rapido - 1 min", "🛒 Blinkit - 5 min", "🥬 Zepto - 7 min", "🔧 Urban Company - 15 min", "🏥 Practo - Video consult"];
-        document.getElementById('nearbyList').innerHTML = nearby.map(n => `<div class="nearby-service">${n}</div>`).join('');
+        const nearby = ["🚗 Ola • 2 min", "🚙 Uber • 3 min", "🛵 Rapido • 1 min", "🛒 Blinkit • 5 min", "🥬 Zepto • 7 min", "🔧 Urban Co • 15 min"];
+        document.getElementById('nearbyList').innerHTML = nearby.map(n => `<span style="display: inline-block; background: linear-gradient(135deg, #667eea15, #764ba215); padding: 0.5rem 1rem; border-radius: 30px; margin: 0.3rem; font-size: 0.9rem;">${n}</span>`).join('');
     }
     
     function updateDashboard() {
-        const statsDiv = document.getElementById('dashboardStats');
-        if(!statsDiv) return;
-        
-        const totalSaved = currentBookings.reduce((sum, b) => {
-            if(b.originalPrice) {
-                const saved = parseInt(b.originalPrice.replace(/[^0-9]/g, '')) - parseInt(b.price.replace(/[^0-9]/g, ''));
-                return sum + (saved || 0);
-            }
-            return sum;
-        }, 0);
-        
-        const totalSpent = currentBookings.reduce((sum, b) => {
-            return sum + (parseInt(b.price.replace(/[^0-9]/g, '')) || 0);
-        }, 0);
-        
-        statsDiv.innerHTML = `
-            <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:1rem;">
-                <div style="background:rgba(255,255,255,0.08); padding:1rem; border-radius:16px; text-align:center;">
-                    <div style="font-size:2rem;">📅</div>
-                    <div style="font-size:1.5rem; font-weight:bold;">${currentBookings.length}</div>
-                    <div>Total Bookings</div>
-                </div>
-                <div style="background:rgba(255,255,255,0.08); padding:1rem; border-radius:16px; text-align:center;">
-                    <div style="font-size:2rem;">💰</div>
-                    <div style="font-size:1.5rem; font-weight:bold;">₹${totalSpent}</div>
-                    <div>Total Spent</div>
-                </div>
-                <div style="background:rgba(255,255,255,0.08); padding:1rem; border-radius:16px; text-align:center;">
-                    <div style="font-size:2rem;">🏆</div>
-                    <div style="font-size:1.5rem; font-weight:bold;">₹${totalSaved}</div>
-                    <div>Total Saved</div>
-                </div>
-                <div style="background:rgba(255,255,255,0.08); padding:1rem; border-radius:16px; text-align:center;">
-                    <div style="font-size:2rem;">📈</div>
-                    <div style="font-size:1.5rem; font-weight:bold;">+${currentBookings.length * 15}%</div>
-                    <div>Growth Rate</div>
-                </div>
-            </div>
+        const total = bookings.reduce((s,b) => s + (parseInt(b.price.replace(/[^0-9]/g, '')) || 0), 0);
+        const saved = bookings.length * 50;
+        document.getElementById('dashboardStats').style.display = 'grid';
+        document.getElementById('dashboardStats').innerHTML = `
+            <div class="stat-card"><div class="stat-number">${bookings.length}</div><div class="stat-label">Total Bookings</div></div>
+            <div class="stat-card"><div class="stat-number">₹${total}</div><div class="stat-label">Total Spent</div></div>
+            <div class="stat-card"><div class="stat-number">₹${saved}</div><div class="stat-label">Total Saved</div></div>
+            <div class="stat-card"><div class="stat-number">🏆 ${bookings.length}</div><div class="stat-label">Best Deals</div></div>
         `;
     }
     
@@ -1032,29 +1296,18 @@
     }
     
     function showDashboard() {
-        const dash = document.getElementById('dashboard');
-        if(dash.style.display === 'none') {
-            dash.style.display = 'block';
-            updateDashboard();
-        } else {
-            dash.style.display = 'none';
-        }
+        const stats = document.getElementById('dashboardStats');
+        stats.style.display = stats.style.display === 'none' ? 'grid' : 'none';
+        updateDashboard();
     }
     
-    // ========== NOTIFICATION FUNCTIONS ==========
+    // Notifications
     function addNotification(msg) {
         notifications.unshift({ msg, time: new Date().toLocaleTimeString() });
         document.getElementById('notifBadge').innerText = notifications.length;
-        
         const dropdown = document.getElementById('notifDropdown');
-        dropdown.innerHTML = notifications.slice(0,5).map(n => `
-            <div style="padding:8px; border-bottom:1px solid rgba(255,255,255,0.1);">
-                <div style="font-size:0.85rem;">${n.msg}</div>
-                <div style="font-size:0.7rem; color:rgba(255,255,255,0.5);">${n.time}</div>
-            </div>
-        `).join('');
-        
-        showToast(msg);
+        dropdown.innerHTML = notifications.slice(0,5).map(n => `<div style="padding: 8px 0; border-bottom: 1px solid #e5e5ea;"><i class="fas fa-bell"></i> ${n.msg}<br><small style="color: #86868b;">${n.time}</small></div>`).join('');
+        toast(msg);
     }
     
     function toggleNotifications() {
@@ -1063,27 +1316,22 @@
     }
     
     function triggerEmergency() {
-        addNotification("🚨 SOS Alert sent to nearby providers!");
-        showToast("🚨 Emergency alert sent!");
-        addAIMessage("🚨 Emergency alert activated! Help is on the way.");
-        
-        // Simulate sending to providers
-        console.log("Emergency alert sent to all nearby service providers");
+        addNotification("🚨 SOS alert sent to nearby providers");
+        toast("Emergency services notified! Help is on the way.");
+        addAIMessage("🚨 Emergency alert activated! I've notified all nearby service providers. Stay calm, help is coming.");
     }
     
-    // ========== UI UTILITY FUNCTIONS ==========
+    // Utils
     function setTheme(theme) {
         document.body.classList.remove('light-mode', 'dark-mode');
         document.body.classList.add(theme + '-mode');
     }
     
-    function showToast(msg) {
-        const toast = document.getElementById('toast');
-        toast.textContent = msg;
-        toast.style.display = 'block';
-        setTimeout(() => {
-            toast.style.display = 'none';
-        }, 3000);
+    function toast(msg) {
+        const t = document.getElementById('toast');
+        t.textContent = msg;
+        t.style.display = 'block';
+        setTimeout(() => t.style.display = 'none', 3000);
     }
     
     function closeModal() {
@@ -1093,94 +1341,56 @@
         document.getElementById('userAddress').value = '';
     }
     
-    // ========== CHATBOT FUNCTIONS ==========
+    // Chatbot
     function toggleChat() {
         document.getElementById('chatWindow').classList.toggle('open');
     }
     
     function addAIMessage(msg) {
-        const container = document.getElementById('chatMessages');
-        const messageDiv = document.createElement('div');
-        messageDiv.className = 'message ai';
-        messageDiv.innerHTML = `<div class="message-bubble">${msg}</div>`;
-        container.appendChild(messageDiv);
-        container.scrollTop = container.scrollHeight;
-    }
-    
-    function addUserMessage(msg) {
-        const container = document.getElementById('chatMessages');
-        const messageDiv = document.createElement('div');
-        messageDiv.className = 'message user';
-        messageDiv.innerHTML = `<div class="message-bubble">${msg}</div>`;
-        container.appendChild(messageDiv);
-        container.scrollTop = container.scrollHeight;
+        const c = document.getElementById('chatMessages');
+        const div = document.createElement('div');
+        div.className = 'message ai';
+        div.innerHTML = `<div class="message-bubble">${msg}</div>`;
+        c.appendChild(div);
+        c.scrollTop = c.scrollHeight;
     }
     
     function sendMessage() {
         const input = document.getElementById('chatInput');
         const msg = input.value.trim();
         if(!msg) return;
-        
-        addUserMessage(msg);
+        const c = document.getElementById('chatMessages');
+        c.innerHTML += `<div class="message user"><div class="message-bubble">${msg}</div></div>`;
         input.value = '';
-        
         setTimeout(() => {
-            let reply = "";
-            const lowerMsg = msg.toLowerCase();
-            
-            if(lowerMsg.includes('cab') || lowerMsg.includes('taxi') || lowerMsg.includes('ride')) {
-                reply = "🚗 CAB DEALS:\n• Rapido: ₹79 (BEST PRICE 🏆)\n• Ola: ₹99\n• Uber: ₹109\nSave up to 21%! Which one would you like to book?";
-            }
-            else if(lowerMsg.includes('grocery') || lowerMsg.includes('food') || lowerMsg.includes('vegetable')) {
-                reply = "🛒 GROCERY DEALS:\n• Zepto: ₹179 (BEST PRICE 🏆)\n• Blinkit: ₹199\n• BigBasket: ₹210\nSave up to 22%! Choose your favorite!";
-            }
-            else if(lowerMsg.includes('repair') || lowerMsg.includes('plumber') || lowerMsg.includes('ac') || lowerMsg.includes('electric')) {
-                reply = "🔧 REPAIR DEALS:\n• Urban Company: ₹399 (BEST PRICE 🏆)\n• Mr. Right: ₹449\n• Service Mandi: ₹379\nSave up to 33%! Need emergency repair? Click SOS!";
-            }
-            else if(lowerMsg.includes('doctor') || lowerMsg.includes('health') || lowerMsg.includes('medical') || lowerMsg.includes('therapy')) {
-                reply = "🏥 HEALTHCARE DEALS:\n• Tata Health: ₹299 (BEST PRICE 🏆)\n• Practo: ₹349\n• PharmEasy: ₹399\nSave up to 33%! Book video consult now!";
-            }
-            else if(lowerMsg.includes('price') || lowerMsg.includes('cost') || lowerMsg.includes('cheapest')) {
-                reply = "💰 Best prices today:\n• Cab: Rapido ₹79\n• Grocery: Zepto ₹179\n• Repair: Urban Co ₹399\n• Healthcare: Tata Health ₹299";
-            }
-            else if(lowerMsg.includes('emergency') || lowerMsg.includes('sos') || lowerMsg.includes('urgent')) {
-                reply = "🚨 EMERGENCY MODE ACTIVATED! Click the red SOS button above to instantly alert all nearby service providers. Help will arrive shortly!";
-            }
-            else if(lowerMsg.includes('hello') || lowerMsg.includes('hi') || lowerMsg.includes('hey')) {
-                reply = "👋 Hello! I'm UniServe AI, your personal assistant. Need help finding the best deals? Just tell me what you need - cab, grocery, repair, or healthcare!";
-            }
-            else {
-                reply = "🤖 I can help you find the best prices for cabs, groceries, repairs, and healthcare! Try typing:\n• 'cab' for ride deals\n• 'grocery' for food deals\n• 'repair' for service deals\n• 'doctor' for healthcare deals";
-            }
+            let reply = "✨ I can help you find the best deals! Try: cab, grocery, repair, or doctor";
+            const m = msg.toLowerCase();
+            if(m.includes('cab')) reply = "🚗 **Cab Deals:**\n• Rapido: ₹79 (Best Price 🏆)\n• Ola: ₹99\n• Uber: ₹109\nSave up to 21%! Which one would you like?";
+            else if(m.includes('grocery')) reply = "🛒 **Grocery Deals:**\n• Zepto: ₹179 (Best Price 🏆)\n• Blinkit: ₹199\n• BigBasket: ₹210\nSave up to 22%!";
+            else if(m.includes('repair')) reply = "🔧 **Repair Deals:**\n• Urban Company: ₹399 (Best Rated ⭐4.9)\n• Mr. Right: ₹449\nSave up to 33%!";
+            else if(m.includes('doctor')) reply = "🏥 **Healthcare Deals:**\n• Tata Health: ₹299 (Best Price 🏆)\n• Practo: ₹349\nSave up to 33%!";
+            else if(m.includes('hello') || m.includes('hi')) reply = "👋 Hello! I'm UniServe AI. Ready to find some amazing deals? Try 'cab', 'grocery', 'repair', or 'doctor'!";
             addAIMessage(reply);
         }, 500);
+        c.scrollTop = c.scrollHeight;
     }
     
-    // ========== AUTO LOGIN CHECK ==========
+    // Auto login check
     auth.onAuthStateChanged(async (user) => {
         if(user) {
             currentUser = user;
             const doc = await db.collection('users').doc(user.uid).get();
-            if(doc.exists) {
-                currentBookings = doc.data().bookings || [];
-            }
+            bookings = doc.exists ? doc.data().bookings || [] : [];
             document.getElementById('authContainer').style.display = 'none';
             document.getElementById('mainApp').style.display = 'block';
-            renderServices();
-            renderCompare();
-            renderHistory();
-            updateDashboard();
-            renderNearby();
-            addAIMessage("👋 Welcome back! I can help you find the best deals on cabs, groceries, repairs, and healthcare. Just click on any service above!");
+            renderAll();
+            addAIMessage(`👋 Welcome back, ${doc.data()?.name || user.email}! Ready to save some money today? Try typing 'cab', 'grocery', 'repair', or 'doctor' for instant deals! 🚀`);
         }
     });
     
-    // Add welcome message on page load if not logged in
     setTimeout(() => {
-        if(!auth.currentUser) {
-            addAIMessage("👋 Welcome to UniServe AI! Please login or sign up to start comparing prices and booking services at the best rates! 🏆");
-        }
-    }, 1000);
+        if(!auth.currentUser) addAIMessage("✨ Welcome to UniServe AI! Sign up or login to start saving up to 33% on your bookings! 🚀");
+    }, 2000);
 </script>
 </body>
 </html>
